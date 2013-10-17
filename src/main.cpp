@@ -17,15 +17,17 @@
 int main(int argc, const char * argv[])
 {
 
-    cv::Mat I = cv::imread("test_img/DSCN6538_1.png");
+    cv::Mat I = cv::imread("test_img/DSCN6533.png");
     int w = I.cols, h = I.rows;
     
     
-    cv::Mat lcW(h,w,CV_32F);
+    cv::Mat lcW(h,w,CV_32F), sW(h,w,CV_32F);;
     computeLCWeight(I, lcW);
+    computeSWeight(I, sW);
     
     cv::imshow("I", I);
     cv::imshow("LC", floatTo8U(lcW));
+    cv::imshow("S", floatTo8U(sW));
     
     cv::waitKey();
     
