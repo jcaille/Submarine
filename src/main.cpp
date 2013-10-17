@@ -21,13 +21,15 @@ int main(int argc, const char * argv[])
     int w = I.cols, h = I.rows;
     
     
-    cv::Mat lcW(h,w,CV_32F), sW(h,w,CV_32F);;
+    cv::Mat lcW(h,w,CV_32F), sW(h,w,CV_32F), eW(h,w,CV_32F);
     computeLCWeight(I, lcW);
     computeSWeight(I, sW);
+    computeEWeight(I, eW);
     
     cv::imshow("I", I);
     cv::imshow("LC", floatTo8U(lcW));
     cv::imshow("S", floatTo8U(sW));
+    cv::imshow("E", floatTo8U(eW));
     
     cv::waitKey();
     

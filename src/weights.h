@@ -25,4 +25,12 @@ void computeLCWeight(const cv::Mat& I,cv::Mat& dst);
  */
 void computeSWeight(const cv::Mat& I,cv::Mat& dst);
 
+/**
+ *  Compute Exposedness weight
+ *  @param I    Input cv::Mat of type CV_8UC3
+ *  @param dst  Destination image. Needs to be of type CV_32FC1 and same size as I
+ */
+void computeEWeight(const cv::Mat& I,cv::Mat& dst);
+
+
 #endif

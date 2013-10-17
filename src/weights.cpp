@@ -10,7 +10,11 @@
 
 #include "weights.h"
 
+#define SQR(x) ((x)*(x))
+
 static const float Ker[] = {1/16.0f, 4/16.0f, 6/16.0f, 4/16.0f, 1/16.0f};
+#define sigmaE 64.0f
+
 
 void computeLCWeight(const cv::Mat& I,cv::Mat& dst)
 {
@@ -56,5 +60,20 @@ void computeSWeight(const cv::Mat& I,cv::Mat& dst)
     for (int y = 0; y < h; ++y)
         for (int x = 0; x < w; ++x)
             dst.at<float>(y,x) = 1/255.0*cv::norm(mean.at<cv::Vec3b>(y,x) , gauss.at<cv::Vec3b>(y,x),CV_L2);
+    
+}
+
+void computeEWeight(const cv::Mat& I,cv::Mat& dst)
+{
+    int w = I.cols, h = I.rows;
+    
+    // Grey image
+    cv::Mat Igray(h,w,CV_8UC1);
+    cv::cvtColor(I, Igray, CV_BGR2GRAY);
+    
+    for (int y = 0; y < h; ++y)
+        for (int x = 0; x < w; ++x)
+            dst.at<float>(y,x) = exp( -0.5*( SQR(Igray.at<uchar>(y,x)-128) /SQR(sigmaE)));
+
     
 }
