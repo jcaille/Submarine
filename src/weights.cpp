@@ -77,3 +77,49 @@ void computeEWeight(const cv::Mat& I,cv::Mat& dst)
 
     
 }
+
+void computeLWeight(const cv::Mat& I,cv::Mat& dst)
+{
+    int w = I.cols, h = I.rows;
+    
+    // Y component, between 0 & 1
+    cv::Mat yChar(h,w,CV_8UC1);
+    cv::cvtColor(I, yChar, CV_BGR2GRAY);
+    cv::Mat y(h,w,CV_32FC1);
+    yChar.convertTo(y,CV_32FC1,1.0/255);
+    
+    
+    // Apply laplacian filter
+    cv::Mat lap(h,w,CV_32FC1);
+    cv::Laplacian(y, lap, CV_32FC1);
+    
+    
+    // Take abs
+    dst = cv::abs(lap);
+    
+
+    
+}
+
+void normalizeWeightMaps(const std::vector<cv::Mat> maps)
+{
+    
+    size_t n = maps.size();
+    
+    assert(n>0);
+    
+    int w = maps[0].cols, h = maps[0].rows;
+    
+    // Compute the per element sum
+    cv::Mat sum(h,w,CV_32FC1);
+    maps[0].copyTo(sum);
+    for (size_t i = 1; i < n; ++i)
+        cv::add(sum, maps[i], sum);
+
+    // Divide each map with the per-element sum
+    for (size_t i = 0; i < n; ++i)
+        cv::divide(maps[i], sum, maps[i]);
+
+    
+    
+}

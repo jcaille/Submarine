@@ -33,4 +33,19 @@ void computeSWeight(const cv::Mat& I,cv::Mat& dst);
 void computeEWeight(const cv::Mat& I,cv::Mat& dst);
 
 
+/**
+ *  Compute Laplacian weight
+ *  @param I    Input cv::Mat of type CV_8UC3
+ *  @param dst  Destination image. Needs to be of type CV_32FC1 and same size as I
+ */
+void computeLWeight(const cv::Mat& I,cv::Mat& dst);
+
+/**
+ *  Normalise the weight maps
+ *
+ *  @param maps std::vector containing all the maps. They need to be of the same size, type CV_32FC1
+ */
+void normalizeWeightMaps(const std::vector<cv::Mat> maps);
+
+
 #endif
