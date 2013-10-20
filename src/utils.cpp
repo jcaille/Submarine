@@ -16,6 +16,4 @@ cv::Mat floatTo8U(const cv::Mat& I)
     cv::Mat dst(I.rows,I.cols,CV_8U);
     I.convertTo(dst, CV_8U, 255/(max-min),-255*min/(max-min) );
     return dst;
-    
-    
 }

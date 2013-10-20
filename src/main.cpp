@@ -12,15 +12,20 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include "weights.h"
+#include "WhiteBalance.h"
 #include "utils.h"
+
 
 int main(int argc, const char * argv[])
 {
-
-    cv::Mat I = cv::imread("test_img/DSCN6533.png");
+    cv::Mat I = cv::imread("/Users/jean/Devel/Submarine/img/test_img/DSCN6532.png");
     int w = I.cols, h = I.rows;
+    cv::Mat wbInput(h, w, CV_8UC3);
     
+    whiteBalanceInput(I, 0.2, wbInput);
+
     
+#if 0
     cv::Mat lW(h,w,CV_32F), lcW(h,w,CV_32F), sW(h,w,CV_32F), eW(h,w,CV_32F);
     computeLWeight(I, lW);
     computeLCWeight(I, lcW);
@@ -35,13 +40,14 @@ int main(int argc, const char * argv[])
     weights[3] = eW;
     
     normalizeWeightMaps(weights);
-    
-    cv::imshow("I", I);
     cv::imshow("L", floatTo8U(lW));
     cv::imshow("LC", floatTo8U(lcW));
     cv::imshow("S", floatTo8U(sW));
     cv::imshow("E", floatTo8U(eW));
-    
+#endif
+
+    cv::imshow("I", I);
+    cv::imshow("White balance Input", wbInput);
     
     cv::waitKey();
     
