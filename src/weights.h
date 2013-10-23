@@ -41,7 +41,7 @@ void computeEWeight(const cv::Mat& I,cv::Mat& dst);
 void computeLWeight(const cv::Mat& I,cv::Mat& dst);
 
 /**
- *  Normalise the weight maps
+ *  Normalise the weight maps so that the sum of each pixels adds up to 1
  *
  *  @param maps std::vector containing all the maps. They need to be of the same size, type CV_32FC1
  */
