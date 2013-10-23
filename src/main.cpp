@@ -18,7 +18,7 @@
 
 int main(int argc, const char * argv[])
 {
-    cv::Mat I = cv::imread("/Users/jean/Devel/Submarine/img/test_img/DSCN6532.png");
+    cv::Mat I = cv::imread("test_img/DSCN6532.png");
     int w = I.cols, h = I.rows;
     cv::Mat wbInput(h, w, CV_8UC3);
     

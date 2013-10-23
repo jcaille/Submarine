@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0FCF3653181402C100DF7A92 /* WhiteBalance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FCF3651181402C100DF7A92 /* WhiteBalance.cpp */; };
+		0FCF3653181402C100DF7A92 /* colorimetry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FCF3651181402C100DF7A92 /* colorimetry.cpp */; };
 		1A202845180F2B8B004A5C86 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A202844180F2B8B004A5C86 /* main.cpp */; };
+		1A56D71F1817B09100FE9516 /* enhancement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A56D71D1817B09100FE9516 /* enhancement.cpp */; };
 		1AEE8E07180F2E4300AC5178 /* weights.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AEE8E06180F2E4300AC5178 /* weights.cpp */; };
 		1AEE8E0A180F315D00AC5178 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AEE8E09180F315D00AC5178 /* utils.cpp */; };
 /* End PBXBuildFile section */
@@ -26,10 +27,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0FCF3651181402C100DF7A92 /* WhiteBalance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WhiteBalance.cpp; sourceTree = "<group>"; };
-		0FCF3652181402C100DF7A92 /* WhiteBalance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhiteBalance.h; sourceTree = "<group>"; };
+		0FCF3651181402C100DF7A92 /* colorimetry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = colorimetry.cpp; sourceTree = "<group>"; };
+		0FCF3652181402C100DF7A92 /* colorimetry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = colorimetry.h; sourceTree = "<group>"; };
 		1A202841180F2B8B004A5C86 /* Submarine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Submarine; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A202844180F2B8B004A5C86 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		1A56D71D1817B09100FE9516 /* enhancement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = enhancement.cpp; sourceTree = "<group>"; };
+		1A56D71E1817B09100FE9516 /* enhancement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = enhancement.h; sourceTree = "<group>"; };
 		1AEE8E05180F2E3400AC5178 /* weights.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = weights.h; sourceTree = "<group>"; };
 		1AEE8E06180F2E4300AC5178 /* weights.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = weights.cpp; sourceTree = "<group>"; };
 		1AEE8E08180F315600AC5178 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
@@ -67,15 +70,25 @@
 			isa = PBXGroup;
 			children = (
 				1A202844180F2B8B004A5C86 /* main.cpp */,
-				1AEE8E05180F2E3400AC5178 /* weights.h */,
-				1AEE8E06180F2E4300AC5178 /* weights.cpp */,
-				1AEE8E08180F315600AC5178 /* utils.h */,
-				1AEE8E09180F315D00AC5178 /* utils.cpp */,
-				0FCF3651181402C100DF7A92 /* WhiteBalance.cpp */,
-				0FCF3652181402C100DF7A92 /* WhiteBalance.h */,
+				1A56D71E1817B09100FE9516 /* enhancement.h */,
+				1A56D71D1817B09100FE9516 /* enhancement.cpp */,
+				1A56D7201817B0C100FE9516 /* Base features */,
 			);
 			name = Submarine;
 			path = src;
+			sourceTree = "<group>";
+		};
+		1A56D7201817B0C100FE9516 /* Base features */ = {
+			isa = PBXGroup;
+			children = (
+				1AEE8E05180F2E3400AC5178 /* weights.h */,
+				1AEE8E06180F2E4300AC5178 /* weights.cpp */,
+				0FCF3652181402C100DF7A92 /* colorimetry.h */,
+				0FCF3651181402C100DF7A92 /* colorimetry.cpp */,
+				1AEE8E08180F315600AC5178 /* utils.h */,
+				1AEE8E09180F315D00AC5178 /* utils.cpp */,
+			);
+			name = "Base features";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -129,7 +142,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0FCF3653181402C100DF7A92 /* WhiteBalance.cpp in Sources */,
+				1A56D71F1817B09100FE9516 /* enhancement.cpp in Sources */,
+				0FCF3653181402C100DF7A92 /* colorimetry.cpp in Sources */,
 				1AEE8E0A180F315D00AC5178 /* utils.cpp in Sources */,
 				1A202845180F2B8B004A5C86 /* main.cpp in Sources */,
 				1AEE8E07180F2E4300AC5178 /* weights.cpp in Sources */,

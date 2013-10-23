@@ -1,5 +1,5 @@
 //
-//  WhiteBalance.h
+//  colorimetry.h
 //  Submarine
 //
 //  Created by Jean Caillé on 20/10/13.
@@ -9,14 +9,22 @@
 #ifndef __Submarine__WhiteBalance__
 #define __Submarine__WhiteBalance__
 
-#include <iostream>
 #include <opencv2/core/core.hpp>
 
 /**
- *  Compute White balance fusion input
+ *  Apply white balance correction to image
  *  @param I    Input cv::Mat of type CV_8UC3
  *  @param dst  Destination image. Needs to be of same type and size as I
  */
-void whiteBalanceInput(cv::Mat I, double lambda, cv::Mat dst);
+void whiteBalance(const cv::Mat& I, cv::Mat& dst, double lambda = 0.2);
+
+/**
+ *  Contrast enhancement of color images using CLAHE technique
+ *
+ *  @param I   Input cv::Mat of type CV_8UC3
+ *  @param dst Destination image. Needs to be of same type and size as I
+ */
+void enhanceContrast(const cv::Mat& I, cv::Mat& dst);
+
 
 #endif /* defined(__Submarine__WhiteBalance__) */
