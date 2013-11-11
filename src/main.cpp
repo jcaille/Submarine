@@ -22,8 +22,8 @@ int main(int argc, const char * argv[])
     int w = I.cols, h = I.rows;
     cv::Mat wbInput(h, w, CV_8UC3);
     
-    whiteBalanceInput(I, 0.2, wbInput);
-
+    whiteBalanceInput(I, 0.5, wbInput);
+    
     
 #if 0
     cv::Mat lW(h,w,CV_32F), lcW(h,w,CV_32F), sW(h,w,CV_32F), eW(h,w,CV_32F);

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0FCF3653181402C100DF7A92 /* WhiteBalance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FCF3651181402C100DF7A92 /* WhiteBalance.cpp */; };
+		0FD9EADB18314214000A5BFA /* fusion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FD9EAD918314214000A5BFA /* fusion.cpp */; };
 		1A202845180F2B8B004A5C86 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A202844180F2B8B004A5C86 /* main.cpp */; };
 		1AEE8E07180F2E4300AC5178 /* weights.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AEE8E06180F2E4300AC5178 /* weights.cpp */; };
 		1AEE8E0A180F315D00AC5178 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AEE8E09180F315D00AC5178 /* utils.cpp */; };
@@ -28,6 +29,8 @@
 /* Begin PBXFileReference section */
 		0FCF3651181402C100DF7A92 /* WhiteBalance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WhiteBalance.cpp; sourceTree = "<group>"; };
 		0FCF3652181402C100DF7A92 /* WhiteBalance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhiteBalance.h; sourceTree = "<group>"; };
+		0FD9EAD918314214000A5BFA /* fusion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fusion.cpp; sourceTree = "<group>"; };
+		0FD9EADA18314214000A5BFA /* fusion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fusion.h; sourceTree = "<group>"; };
 		1A202841180F2B8B004A5C86 /* Submarine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Submarine; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A202844180F2B8B004A5C86 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		1AEE8E05180F2E3400AC5178 /* weights.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = weights.h; sourceTree = "<group>"; };
@@ -71,8 +74,10 @@
 				1AEE8E06180F2E4300AC5178 /* weights.cpp */,
 				1AEE8E08180F315600AC5178 /* utils.h */,
 				1AEE8E09180F315D00AC5178 /* utils.cpp */,
-				0FCF3651181402C100DF7A92 /* WhiteBalance.cpp */,
 				0FCF3652181402C100DF7A92 /* WhiteBalance.h */,
+				0FCF3651181402C100DF7A92 /* WhiteBalance.cpp */,
+				0FD9EADA18314214000A5BFA /* fusion.h */,
+				0FD9EAD918314214000A5BFA /* fusion.cpp */,
 			);
 			name = Submarine;
 			path = src;
@@ -129,6 +134,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FD9EADB18314214000A5BFA /* fusion.cpp in Sources */,
 				0FCF3653181402C100DF7A92 /* WhiteBalance.cpp in Sources */,
 				1AEE8E0A180F315D00AC5178 /* utils.cpp in Sources */,
 				1A202845180F2B8B004A5C86 /* main.cpp in Sources */,

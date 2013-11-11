@@ -15,7 +15,6 @@
 void whiteBalanceInput(cv::Mat I, double lambda, cv::Mat dst){
     //Compute mean color of I
     cv::Scalar meanColor = cv::mean(I) / 255.0;
-    std::cout << meanColor << std::endl;
     
     //Grey average value
     double averageGrayValue = (meanColor[0] + meanColor[1] + meanColor[2]) / 3.0;
