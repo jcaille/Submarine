@@ -28,16 +28,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0FCDCCE418314E9600B2EBBC /* DSCN6522.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DSCN6522.png; sourceTree = "<group>"; };
-		0FCDCCE518314E9600B2EBBC /* DSCN6523.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DSCN6523.png; sourceTree = "<group>"; };
-		0FCDCCE618314E9600B2EBBC /* DSCN6532.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DSCN6532.png; sourceTree = "<group>"; };
-		0FCDCCE718314E9600B2EBBC /* DSCN6533.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DSCN6533.png; sourceTree = "<group>"; };
-		0FCDCCE818314E9600B2EBBC /* DSCN6538_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DSCN6538_1.png; sourceTree = "<group>"; };
-		0FCDCCE918314E9600B2EBBC /* DSCN6539.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DSCN6539.png; sourceTree = "<group>"; };
-		0FCDCCEA18314E9600B2EBBC /* DSCN6540.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DSCN6540.png; sourceTree = "<group>"; };
-		0FCDCCEB18314E9600B2EBBC /* PICT0400.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PICT0400.png; sourceTree = "<group>"; };
-		0FCDCCEC18314E9600B2EBBC /* PICT0403.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PICT0403.png; sourceTree = "<group>"; };
-		0FCDCCED18314E9600B2EBBC /* PICT0422.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PICT0422.png; sourceTree = "<group>"; };
 		0FCF3651181402C100DF7A92 /* colorimetry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = colorimetry.cpp; sourceTree = "<group>"; };
 		0FCF3652181402C100DF7A92 /* colorimetry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = colorimetry.h; sourceTree = "<group>"; };
 		0FD9EAD918314214000A5BFA /* fusion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fusion.cpp; sourceTree = "<group>"; };
@@ -63,28 +53,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0FCDCCE318314E9600B2EBBC /* test_img */ = {
-			isa = PBXGroup;
-			children = (
-				0FCDCCE418314E9600B2EBBC /* DSCN6522.png */,
-				0FCDCCE518314E9600B2EBBC /* DSCN6523.png */,
-				0FCDCCE618314E9600B2EBBC /* DSCN6532.png */,
-				0FCDCCE718314E9600B2EBBC /* DSCN6533.png */,
-				0FCDCCE818314E9600B2EBBC /* DSCN6538_1.png */,
-				0FCDCCE918314E9600B2EBBC /* DSCN6539.png */,
-				0FCDCCEA18314E9600B2EBBC /* DSCN6540.png */,
-				0FCDCCEB18314E9600B2EBBC /* PICT0400.png */,
-				0FCDCCEC18314E9600B2EBBC /* PICT0403.png */,
-				0FCDCCED18314E9600B2EBBC /* PICT0422.png */,
-			);
-			name = test_img;
-			path = img/test_img;
-			sourceTree = "<group>";
-		};
 		1A202838180F2B8B004A5C86 = {
 			isa = PBXGroup;
 			children = (
-				0FCDCCE318314E9600B2EBBC /* test_img */,
 				1A202843180F2B8B004A5C86 /* Submarine */,
 				1A202842180F2B8B004A5C86 /* Products */,
 			);
@@ -219,9 +190,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -251,8 +222,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				SDKROOT = macosx10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
