@@ -117,7 +117,4 @@ void normalizeWeightMaps(const std::vector<cv::Mat> maps)
     // Divide each map with the per-element sum
     for (size_t i = 0; i < n; ++i)
         cv::divide(maps[i], sum, maps[i]);
-
-    
-    
 }

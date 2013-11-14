@@ -15,7 +15,7 @@
 
 int main(int argc, const char * argv[])
 {
-    cv::Mat I = cv::imread("test_img/PICT0422.png");
+    cv::Mat I = cv::imread("/Users/jean/Devel/Submarine/img/test_img/DSCN6539.png");
     int w = I.cols, h = I.rows;
     
     cv::Mat betterI(h, w, CV_8UC3);

@@ -26,5 +26,4 @@ void whiteBalance(const cv::Mat& I, cv::Mat& dst, double lambda = 0.2);
  */
 void enhanceContrast(const cv::Mat& I, cv::Mat& dst);
 
-
 #endif /* defined(__Submarine__WhiteBalance__) */
