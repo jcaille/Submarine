@@ -7,8 +7,8 @@
 //
 
 #include "fusion.h"
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/highgui/highgui.hpp"
+
+#include <opencv2/imgproc/imgproc.hpp>
 
 #pragma mark - GAUSSIAN PYRAMID
 
@@ -19,7 +19,7 @@ void gaussianPyramid(const cv::Mat& input, int levels, std::vector<cv::Mat>& pyr
     // Called on mask
     cv::Size pyrSize = input.size();
     pyramid.push_back(input);
-    for(int i = 0 ; i < levels - 1 ; i++){
+    for(int i = 0 ; i < levels - 1 ; ++i){
         cv::Mat newLevel ;
         pyrSize = cv::Size(MAX(1, pyrSize.width / 2), MAX(1, pyrSize.height / 2)); // Make sure size is valid
         cv::pyrDown(pyramid.back(), newLevel, pyrSize);
@@ -34,7 +34,7 @@ void laplacianPyramid(const cv::Mat& input, int levels, std::vector<cv::Mat>& py
     pyramid.clear();
     
     cv::Mat currentImg = input;
-    for (int i = 0; i < levels; i ++) {
+    for (int i = 0; i < levels; ++i) {
         cv::Mat down, up;
         cv::pyrDown(currentImg, down);
         cv::pyrUp(down, up, currentImg.size());
@@ -62,11 +62,12 @@ void reconstructFromLaplacianPyramid(const std::vector<cv::Mat>& pyramid, cv::Ma
 
 #pragma mark - FUSION
 
-void fuseInputs(std::vector<cv::Mat> inputs, std::vector<cv::Mat> weights, cv::Mat& dst)
+void laplacianFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::Mat>& weights, cv::Mat& dst)
 {
     dst.setTo(cv::Scalar(0,0,0));
     
     int levels = 5;
+    
     //Compute laplacian pyramid
     std::vector<cv::Mat> firstInputPyramid; laplacianPyramid(inputs[0], levels, firstInputPyramid);
     std::vector<cv::Mat> secondInputPyramid; laplacianPyramid(inputs[1], levels, secondInputPyramid);
@@ -84,11 +85,11 @@ void fuseInputs(std::vector<cv::Mat> inputs, std::vector<cv::Mat> weights, cv::M
     }
 }
 
-void naiveFusion(std::vector<cv::Mat> inputs, std::vector<cv::Mat> weights, cv::Mat& dst)
+void naiveFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::Mat>& weights, cv::Mat& dst)
 {
     dst.setTo(cv::Scalar(0,0,0));
     
-    for(int i = 0 ; i < inputs.size(); i++){
+    for(int i = 0 ; i < inputs.size(); ++i){
         cv::Mat A;
         cv::multiply(inputs[i], weights[i], A);
         dst += A;

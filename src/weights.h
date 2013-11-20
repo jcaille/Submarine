@@ -45,7 +45,7 @@ void computeLWeight(const cv::Mat& I,cv::Mat& dst);
  *
  *  @param maps std::vector containing all the maps. They need to be of the same size, type CV_32FC1
  */
-void normalizeWeightMaps(const std::vector<cv::Mat> maps);
+void normalizeWeightMaps(const std::vector<cv::Mat>& maps);
 
 
 #endif
