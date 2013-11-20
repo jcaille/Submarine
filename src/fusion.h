@@ -13,6 +13,6 @@
 #include <vector>
 #include <opencv2/core/core.hpp>
 
-void fuseInputs(std::vector<cv::Mat> inputs, std::vector<cv::Mat> weights, cv::Mat dst);
+void fuseInputs(std::vector<cv::Mat> inputs, std::vector<cv::Mat> weights, cv::Mat& dst);
 
 #endif /* defined(__Submarine__fusion__) */
