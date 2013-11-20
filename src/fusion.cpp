@@ -50,6 +50,8 @@ std::vector<cv::Mat> laplacianPyramid(cv::Mat input, int levels){
 #pragma mark - FUSION
 
 void fuseInputs(std::vector<cv::Mat> inputs, std::vector<cv::Mat> weights, cv::Mat dst){
+    dst.setTo(cv::Scalar(0,0,0));
+    
     int levels = 5;
     //Compute laplacian pyramid
     std::vector<cv::Mat> firstInputPyramid = laplacianPyramid(inputs[0], levels);
@@ -69,6 +71,8 @@ void fuseInputs(std::vector<cv::Mat> inputs, std::vector<cv::Mat> weights, cv::M
 }
 
 void naiveFusion(std::vector<cv::Mat> inputs, std::vector<cv::Mat> weights, cv::Mat dst){
+    dst.setTo(cv::Scalar(0,0,0));
+    
     for(int i = 0 ; i < inputs.size(); i++){
         cv::Mat A;
         cv::multiply(inputs[i], weights[i], A);
