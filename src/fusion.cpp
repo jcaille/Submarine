@@ -46,6 +46,20 @@ void laplacianPyramid(const cv::Mat& input, int levels, std::vector<cv::Mat>& py
     pyramid.push_back(currentImg);
 }
 
+void reconstructFromLaplacianPyramid(const std::vector<cv::Mat>& pyramid, cv::Mat& dst)
+{
+    int level = (int)(pyramid.size()-1);
+    cv::Mat current = pyramid[level];
+    for (int i = level-1; i >= 0; --i) {
+        cv::Mat up;
+        cv::pyrUp(current, up, pyramid[i].size());
+        cv::add(up, pyramid[i], current);
+    }
+
+    current.copyTo(dst);
+    
+}
+
 #pragma mark - FUSION
 
 void fuseInputs(std::vector<cv::Mat> inputs, std::vector<cv::Mat> weights, cv::Mat& dst)
