@@ -62,36 +62,54 @@ void reconstructFromLaplacianPyramid(const std::vector<cv::Mat>& pyramid, cv::Ma
 
 #pragma mark - FUSION
 
-void laplacianFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::Mat>& weights, cv::Mat& dst)
+void naiveFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::Mat>& weights, cv::Mat& dst)
 {
+    dst.create(inputs[0].size(), CV_8UC3);
     dst.setTo(cv::Scalar(0,0,0));
     
-    int levels = 5;
+    int w = inputs[0].cols, h = inputs[0].rows;
     
-    //Compute laplacian pyramid
-    std::vector<cv::Mat> firstInputPyramid; laplacianPyramid(inputs[0], levels, firstInputPyramid);
-    std::vector<cv::Mat> secondInputPyramid; laplacianPyramid(inputs[1], levels, secondInputPyramid);
-    
-    //Compute gaussian pyramid of weights
-    std::vector<cv::Mat> firstWeightPyramid; gaussianPyramid(weights[0], levels, firstWeightPyramid);
-    std::vector<cv::Mat> secondWeightPyramid; gaussianPyramid(weights[1], levels, secondWeightPyramid);
-    
-    //Fuse inputs according to formula
-    for (int i = 0 ; i < firstInputPyramid.size(); i++){
-        cv::Mat A, B;
-        cv::multiply(firstInputPyramid[i], firstWeightPyramid[i], A);
-        cv::multiply(secondInputPyramid[i], secondWeightPyramid[i], B);
-        dst += A+B;
+    for(int i = 0 ; i < inputs.size(); ++i){
+        for (int y = 0; y < h; ++y){
+            for (int x = 0; x < w; ++x){
+                dst.at<cv::Vec3b>(y,x) += weights[i].at<float>(y,x)*inputs[i].at<cv::Vec3b>(y,x);
+            }
+        }
     }
 }
 
-void naiveFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::Mat>& weights, cv::Mat& dst)
+void laplacianFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::Mat>& weights, cv::Mat& dst)
 {
-    dst.setTo(cv::Scalar(0,0,0));
-    
-    for(int i = 0 ; i < inputs.size(); ++i){
-        cv::Mat A;
-        cv::multiply(inputs[i], weights[i], A);
-        dst += A;
+    assert(inputs.size() == weights.size());
+
+    const int levels = 5;
+    const int n = (int)inputs.size();
+
+    // Compute laplacian pyramids and gaussian weights
+    std::vector< std::vector<cv::Mat> > inputPyramids(n);
+    std::vector< std::vector<cv::Mat> > weightPyramids(n);
+    for (int i = 0; i < n; ++i){
+        laplacianPyramid(inputs[i], levels, inputPyramids[i]);
+        gaussianPyramid(weights[i], levels+1, weightPyramids[i]);
     }
+    
+    // "Inverse" pyramids dimensions (start by level, then by image instead of the inverse)
+    std::vector< std::vector<cv::Mat> > invInputPyramids(levels+1);
+    std::vector< std::vector<cv::Mat> > invWeightPyramids(levels+1);
+    for (int i = 0; i < n; ++i){
+        for (int j = 0; j < levels+1; ++j){
+            invInputPyramids[j].push_back(inputPyramids[i][j]);
+            invWeightPyramids[j].push_back(weightPyramids[i][j]);
+        }
+    }
+    
+    // "Naively" merge all levels of pyramid
+    std::vector<cv::Mat> outputPyr(levels+1);
+    for (int i = 0 ; i < levels+1; ++i){
+        naiveFusion(invInputPyramids[i], invWeightPyramids[i], outputPyr[i]);
+    }
+    
+    // And construct the output from the pyramod
+    reconstructFromLaplacianPyramid(outputPyr, dst);
 }
+

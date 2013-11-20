@@ -99,7 +99,7 @@ void computeLWeight(const cv::Mat& I,cv::Mat& dst)
     
 }
 
-void normalizeWeightMaps(const std::vector<cv::Mat>& maps)
+void normalizeWeightMaps(std::vector<cv::Mat>& maps)
 {
     
     size_t n = maps.size();

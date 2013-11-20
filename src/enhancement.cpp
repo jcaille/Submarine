@@ -10,6 +10,7 @@
 
 #include "weights.h"
 #include "colorimetry.h"
+#include "fusion.h"
 
 void _computeFirstInput(const cv::Mat& I, cv::Mat& out)
 {
@@ -28,6 +29,17 @@ void _computeSecondInput(const cv::Mat& firstInput, cv::Mat& out)
 }
 
 
+void _computeWeights(const std::vector<cv::Mat>& input, std::vector<cv::Mat>& weights)
+{
+    
+    for (int i = 0; i<input.size(); ++i) {
+        computeLCWeight(input[i], weights[i]);
+    }
+    
+    normalizeWeightMaps(weights);
+    
+}
+
 void enhanceUnderwaterImage(const cv::Mat& I, cv::Mat& out)
 {
     
@@ -41,8 +53,17 @@ void enhanceUnderwaterImage(const cv::Mat& I, cv::Mat& out)
     cv::Mat secondInput(h,w,CV_8UC3);
     _computeSecondInput(firstInput,secondInput);
     
-    // For now
-    secondInput.copyTo(out);
+    std::vector<cv::Mat> input;
+    input.push_back(secondInput);
+    input.push_back(firstInput);
+    
+    std::vector<cv::Mat> weights;
+    weights.push_back(cv::Mat(h,w,CV_32F));
+    weights.push_back(cv::Mat(h,w,CV_32F));
+    
+    _computeWeights(input,weights);
+    
+    laplacianFusion(input, weights, out);
     
     
 }
