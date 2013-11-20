@@ -39,10 +39,11 @@ void laplacianPyramid(const cv::Mat& input, int levels, std::vector<cv::Mat>& py
         cv::pyrDown(currentImg, down);
         cv::pyrUp(down, up, currentImg.size());
         cv::Mat newLevel;
-        cv::absdiff(currentImg, up, newLevel);
+        cv::subtract(currentImg, up, newLevel);
         pyramid.push_back(newLevel);
         currentImg = down;
     }
+    pyramid.push_back(currentImg);
 }
 
 #pragma mark - FUSION
