@@ -12,17 +12,20 @@
 #include "colorimetry.h"
 #include "fusion.h"
 
+#include <opencv2/imgproc/imgproc.hpp>
+
 void _computeFirstInput(const cv::Mat& I, cv::Mat& out)
 {
     // First input is white balanced original image
-    whiteBalance(I,out);
+    whiteBalance(I,out,.0);
 }
 
 void _computeSecondInput(const cv::Mat& firstInput, cv::Mat& out)
 {
     
     // Apply a filter to remove the noise
-    cv::Mat smooth = firstInput.clone();
+    cv::Mat smooth;
+    cv::bilateralFilter(firstInput, smooth, -1, 20, 5);
     
     // Enhance contrast
     enhanceContrast(smooth, out);
@@ -33,7 +36,7 @@ void _computeWeights(const std::vector<cv::Mat>& input, std::vector<cv::Mat>& we
 {
     
     for (int i = 0; i<input.size(); ++i) {
-        computeLCWeight(input[i], weights[i]);
+        computeEWeight(input[i], weights[i]);
     }
     
     normalizeWeightMaps(weights);
