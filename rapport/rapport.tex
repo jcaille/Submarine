@@ -1,0 +1,148 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.3 (9/9/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside]{article}
+
+\usepackage{lipsum} % Package to generate dummy text throughout this template
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[utf8]{inputenc}
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
+\usepackage{multicol} % Used for the two-column layout of the document
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+\usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+\usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+\renewcommand\thesubsection{\Roman{subsection}} % Roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[C]{Améliorations d'images sous-marines. Rapport de Projet} % Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\title{\vspace{-15mm}\fontsize{24pt}{10pt}\selectfont\textbf{Amélioration d'images sous-marines}} % Article title
+
+\author{
+\large
+\textsc{Jean Caillé, Florian Denis}\\[2mm] % Your name
+\normalsize Télécom ParisTech - SI241 \\ % Your institution
+\normalsize \href{mailto:jean.caille@polytechnique.edu}{jean.caille@polytechnique.edu} - \href{mailto:florian.denis@polytechnique.edu}{florian.denis@polytechnique.edu}  % Your email address
+\vspace{-5mm}
+}
+\date{}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Insert title
+
+\thispagestyle{fancy} % All pages have headers and footers
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\begin{abstract}
+
+Les images sous marines sont par définitions acquises dans un environnement ou les conditions de visibilités sont particulièrement mauvaises. Ainsi, les images obtenues par des appareils classiques sont fortement dégradées. L'hétérogénéité du milieu, la diffusion de la lumière par les particules en suspension et la non-transparence de l'eau contribuent chacun à une prise de vue s'éloignant de la réalité. L'article que nous avons étudié montre qu'il est possible de supprimer ces dégradations dans certians cas, en utilisant des hypothèses minimes quand à la scène observée. Cette méthode est de plus applicable à un grand nombre d'exemple car elle ne nécessite qu'une image en entrée.\\
+Nous avons étudié, implémenté et mesuré les performances de la méthodes proposées par les auteurs de l'article. Dan ce rapport, nous nous attacherons à décrire d'une part la technique employée, et nous décrirons les outils utilisés pour l'implémentation. Nous analyserons ensuite nos résultats et les comparerons avec ceux obtenus par les auteurs. Finalement, nous tenterons de suggérer des améliorations à cette méthode.\\
+
+\end{abstract}
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\begin{multicols}{2} % Two-column layout throughout the main article text
+
+\section{Introduction et Motivation}
+Aujoud'hui, le grand public commence à s'équiper d'appareils photos résistants à l'eau (GoPro, ...). Les images acquises dans ces conditions difficiles sont souvents dégradées. Toutefois, ce même matériel est suffisement sensible pour permettre la restauration des images, permettant alors d'améliorer grandement la qualité des images rendues.\\
+Nous avons choisi d'effectuer ce projet car les résultats promis par l'article et la description qui en était faite nous semblait intéressants. Plusieurs concepts variés, très utilisés en images sont introduits (Balance des blancs et Gray-World, Fusion par pyramide, ...). De plus, les techniques décritent dans le papier sont applicable à de nombreux problèmes de restauration d'images, en particulier les images dégradées par un brouillard ou par la polution aérienne. Finalement, ce projet nous permettait de tester notre implémentation dans des cas réelles (typiquement : des images sous-marines trouvées sur internet). En effet, contrairement à certains projets ou les données d'entrées sont nombreuses, ou dans un format particulier, la technique décrite dans l'article peut s'appliquer aux photos individuelles.\\
+L’article propose un post-traitement basé sur la fusion d’images afin d’améliorer la qualité de la prise de vue. Les applications d’un tel traitement sont nombreuses, tant pour l’affichage et la visualisation de ces images que pour des problématiques de visions plus intéressantes (tels l’extraction de points clés, la détection de contours et la reconnaissance de forme).\\
+
+%------------------------------------------------
+
+\section{Méthode}
+
+La méthode décrite par l’article consiste en la fusion de deux images générées à partir de l’image initiale. Les auteurs supposent que les dégradations de la prise de vue sous-marine sont du d’une part la balance des couleurs ainsi que les contrastes de la scène. Ainsi les deux images qui seront fusionnées sont chacune créées afin de résoudre un de ces problèmes.\\
+
+%---------------------------------------------------> SUB SECTION Balance des blancs
+\subsection{Balance des blancs}
+
+%---------------------------------------------------> SUB SECTION Amélioration du Contraste
+\subsection{Amélioration du Contraste}
+
+%---------------------------------------------------> SUB SECTION Poids de fusions
+\subsection{Poids de fusions}
+
+%------------------------------------------------------------> SUB SUB SECTION Poid 1
+\subsubsection{Poid 1}
+
+%------------------------------------------------------------> SUB SUB SECTION Poids 2
+\subsubsection{Poids 2}	
+
+%---------------------------------------------------> SUB SECTION Fusion par pyramide Laplacienne
+\subsection{Fusion par pyramide Laplacienne}
+	
+\section{Implémentation}
+
+\section{Résultats}
+
+\section{Ouvertures et Amélioratiosn possibles}
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+
+\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
+
+\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
+Figueredo, A.~J. and Wolf, P. S.~A. (2009).
+\newblock Assortative pairing and life history strategy - a cross-cultural
+  study.
+\newblock {\em Human Nature}, 20:317--330.
+ 
+\end{thebibliography}
+
+%----------------------------------------------------------------------------------------
+
+\end{multicols}
+
+\end{document}
