@@ -17,12 +17,10 @@ void gaussianPyramid(const cv::Mat& input, int levels, std::vector<cv::Mat>& pyr
     pyramid.clear();
     
     // Called on mask
-    cv::Size pyrSize = input.size();
     pyramid.push_back(input);
     for(int i = 0 ; i < levels - 1 ; ++i){
         cv::Mat newLevel ;
-        pyrSize = cv::Size(MAX(1, pyrSize.width / 2), MAX(1, pyrSize.height / 2)); // Make sure size is valid
-        cv::pyrDown(pyramid.back(), newLevel, pyrSize);
+        cv::pyrDown(pyramid.back(), newLevel);
         pyramid.push_back(newLevel);
     }
 }
