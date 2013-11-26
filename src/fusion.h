@@ -9,10 +9,9 @@
 #ifndef __Submarine__fusion__
 #define __Submarine__fusion__
 
-#include <iostream>
-#include <vector>
 #include <opencv2/core/core.hpp>
 
-void fuseInputs(std::vector<cv::Mat> inputs, std::vector<cv::Mat> weights, cv::Mat dst);
+void naiveFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::Mat>& weights, cv::Mat& dst);
+void laplacianFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::Mat>& weights, cv::Mat& dst);
 
 #endif /* defined(__Submarine__fusion__) */

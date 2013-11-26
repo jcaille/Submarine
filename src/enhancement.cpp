@@ -11,23 +11,38 @@
 #include "weights.h"
 #include "colorimetry.h"
 #include "fusion.h"
+#include <opencv2/imgproc/imgproc.hpp>
 
 void _computeFirstInput(const cv::Mat& I, cv::Mat& out)
 {
     // First input is white balanced original image
-    whiteBalance(I,out);
+    whiteBalance(I,out,.0);
 }
 
 void _computeSecondInput(const cv::Mat& firstInput, cv::Mat& out)
 {
     
     // Apply a filter to remove the noise
-    cv::Mat smooth = firstInput.clone();
+    cv::Mat smooth;
+    cv::bilateralFilter(firstInput, smooth, -1, 20, 5);
     
     // Enhance contrast
     enhanceContrast(smooth, out);
 }
 
+
+void _computeWeights(const std::vector<cv::Mat>& input, std::vector<cv::Mat>& weights)
+{
+    
+    for (int i = 0; i<input.size(); ++i) {
+        computeEWeight(input[i], weights[i]);
+    }
+    
+    normalizeWeightMaps(weights);
+    
+}
+
+>>>>>>> 3cc1fca97e5437fb1a7e949583acd25724cee4a4
 void enhanceUnderwaterImage(const cv::Mat& I, cv::Mat& out)
 {
     int w = I.cols, h = I.rows;
@@ -39,12 +54,18 @@ void enhanceUnderwaterImage(const cv::Mat& I, cv::Mat& out)
     // Compute 2nd input
     cv::Mat secondInput(h,w,CV_8UC3);
     _computeSecondInput(firstInput,secondInput);
+
+    std::vector<cv::Mat> input;
+    input.push_back(secondInput);
+    input.push_back(firstInput);
     
-    // Compute weights;
-    cv::Mat weight1(h, w, CV_32FC1);
-    computeLCWeight(firstInput, weight1);
-    cv::Mat weight2(h, w, CV_32FC1);
-    computeLCWeight(secondInput, weight2);
+    std::vector<cv::Mat> weights;
+    weights.push_back(cv::Mat(h,w,CV_32F));
+    weights.push_back(cv::Mat(h,w,CV_32F));
+    
+    _computeWeights(input,weights);
+    
+    laplacianFusion(input, weights, out);
     
     std::vector<cv::Mat> weights;
     weights.push_back(weight1); weights.push_back(weight2);

@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Florian Denis. All rights reserved.
 //
 
-#include <opencv2/imgproc/imgproc.hpp>
-
 #include "weights.h"
+
+#include <opencv2/imgproc/imgproc.hpp>
 
 #define SQR(x) ((x)*(x))
 
@@ -99,7 +99,7 @@ void computeLWeight(const cv::Mat& I,cv::Mat& dst)
     
 }
 
-void normalizeWeightMaps(const std::vector<cv::Mat> maps)
+void normalizeWeightMaps(std::vector<cv::Mat>& maps)
 {
     
     size_t n = maps.size();
@@ -107,6 +107,7 @@ void normalizeWeightMaps(const std::vector<cv::Mat> maps)
     assert(n>0);
     
     int w = maps[0].cols, h = maps[0].rows;
+    float e = 1/float(n);
     
     // Compute the per element sum
     cv::Mat sum(h,w,CV_32FC1);
@@ -115,6 +116,7 @@ void normalizeWeightMaps(const std::vector<cv::Mat> maps)
         cv::add(sum, maps[i], sum);
 
     // Divide each map with the per-element sum
+
     for (size_t i = 0; i < n; ++i)
         cv::divide(maps[i], sum, maps[i]);
 }
