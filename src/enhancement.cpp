@@ -42,7 +42,6 @@ void _computeWeights(const std::vector<cv::Mat>& input, std::vector<cv::Mat>& we
     
 }
 
->>>>>>> 3cc1fca97e5437fb1a7e949583acd25724cee4a4
 void enhanceUnderwaterImage(const cv::Mat& I, cv::Mat& out)
 {
     int w = I.cols, h = I.rows;
