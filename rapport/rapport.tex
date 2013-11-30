@@ -113,17 +113,33 @@ Nous avons ainsi corrigé l'image de telle sorte que la somme des couleurs soit 
 %---------------------------------------------------> SUB SECTION Amélioration du Contraste
 \subsection{Amélioration du Contraste}
 La seconde entrée du procussus de fusion est quand à elle créée pour corriger les problèmes de contrastes dus à la diffusion de la lumière dans le milieu aquatique. Elle est obtenue à paritr de l'image où les couleurs ont été corrigées. Elle est obtenue en deux étapes : réduction du bruit puis amélioration du constraste.\\
-La réduction du bruit est effectué à l'aide d'un simple filtre bilatéral. Ce filtre non linéaire remplace l'intensité de chaque pixel par une moyenne pondéré des pixels avoisinants, où les poids dépendent à la fois de la distance au pixel central, mais également de la différence d'intensité entre les pixels considérés. Ce bruit a la propriété de conserver les contours tout en supprimant correctement le bruit. [[FIGURE]]\\
-Il existe de nombreuses méthodes permettant de réhausser le contraste de l'image, en particulier la méthode de \emph{Local Adaptative histogram Equalization} qui égalise localement des histogrammes, c'est-à-dire une transformation locale du constraste basée sur le voisinage du pixel. Contrairement à une méthode globale, on ne court pas le risque de saturer l'image tout en gardant une plage dynamique maximum. Toutefois, il est important de noter que cette technique est très sensible au bruit. Si le filtre bilatéral appliqué n'est pas assez puissant, il peut être nécessaire d'employer une technique plus robuste pour augmenter le constraste. Une solution consiste à employer une méthode similaire nommée \emph{Constrast Limited Adaptative Histogram Equalization (CLAHE)}. 
+La réduction du bruit est effectué à l'aide d'un simple filtre bilatéral. Ce filtre non linéaire remplace l'intensité de chaque pixel par une moyenne pondéré des pixels avoisinants, où les poids dépendent à la fois de la distance au pixel central, mais également de la différence d'intensité entre les pixels considérés. Ce bruit a la propriété de conserver les contours tout en supprimant correctement le bruit. Il est important de noter que si l'article conseille un débruitage cohérent dans le temps (pouvant donc s'appliquer à la vidéo), cela n'est pas nécessaire pour les applications à des images simples. [[FIGURE]]\\
+Il existe de nombreuses méthodes permettant de réhausser le contraste de l'image, en particulier la méthode de \emph{Local Adaptative histogram Equalization} qui égalise localement des histogrammes, c'est-à-dire une transformation locale du constraste basée sur le voisinage du pixel. Contrairement à une méthode globale, on ne court pas le risque de saturer l'image tout en gardant une plage dynamique maximum. Toutefois, il est important de noter que cette technique est très sensible au bruit. Si le filtre bilatéral appliqué n'est pas assez puissant, il peut être nécessaire d'employer une technique plus robuste pour augmenter le constraste. Une solution consiste à employer une méthode similaire nommée \emph{Constrast Limited Adaptative Histogram Equalization (CLAHE)}. Dans cette méthode, le contraste est limité, et les pics de l'histogrammes sont redistribués uniformément dans l'histogramme.
 
 %---------------------------------------------------> SUB SECTION Poids de fusions
 \subsection{Poids de fusions}
+Une fois les deux entrées générées, il est nécessaire de les fusionner de manière intelligente. Une simple moyenne des images (fusion naïve) n'est pas adaptée, en effet, sur certaines zones (contours, zones visuellement proéminentes, ...) il est nécessaire de faire ressortir le contraste (et donc l'entrée numéro 2) au détriment des couleurs, alors que dans les zones constantes (aplats de couleur), il vaut mieux mettre en avant la correction de couleur. La fusion va donc s'effectuer en fonction d'un ou plusieurs poids, qui dénotterons l'importance que l'on souhaite appliquer à chaque image d'entrée dans l'image résultante, et ce pour tous les pixels considérés. 
 
 %------------------------------------------------------------> SUB SUB SECTION Poid 1
-\subsubsection{Poid 1}
+\subsubsection{Poids Laplacien}
+Il se calcul en appliquand un filtre laplacien sur chaque entrées du filtre. Il est censé mettre en valeur les contours et zones texturées, mais est peu adapté aux problèmes de restaurations d'images sous-marines, car il ne fait pas la différence entre zones de lumnisoté constante et zones de luminosité légèrement croissante (ou décroissante)
 
 %------------------------------------------------------------> SUB SUB SECTION Poids 2
-\subsubsection{Poids 2}	
+\subsubsection{Poids de Contraste Local}
+Ce poids a été créé pour mettre en avant les zones contrastées. Il se calcul en chaque pixel par la différence de la valeur de l'image I avec la valeur de I filtré par un passe-bas : $$ W_{LC}(x,y) = \|I(x,y) - I_{f}(x,y)\| $$
+L'article recommande l'utilisation pour le filtre passe-bas d'un noyeau binomial séparable de taille $5$ x $5$. Ce filtre est en effet une bonne approximation d'une Gaussienne, tout en restant algorithmiquement peu couteux à calculer.
+
+%------------------------------------------------------------> SUB SUB SECTION Poids de Saillance
+\subsubsection{Poids de Saillance}
+Le poids de Saillanche cherche à mettre en valeur les objets visuellement proéminants qui peuvent exister dans une scène sous-marines. Une technique pour trouver la saillance d'un point et de comparer sa valeure avec une moyenne des valeurs des pixels l'entourant. Ce comportement est similaire au concept biologique de \emph{center-surround constrast}, ou contraste centre-contour. Toutefois, l'article précise que ce poids favorise les zones lumineuses, et pour protéger les tons moyens, les auteurs suggèrent l'utilisation du poids d'exposition.
+
+%------------------------------------------------------------> SUB SUB SECTION Poids d'exposition
+\subsubsection{Poids d'exposition}
+Cette carte de poids cherche à estimer si le pixel considéré est bien exposé, i.e. si sa luminosité est proche de la valeur moyenne $0.5$. On utilise ensuite une gaussienne pour obtenir la valeur du poids : $$W_{exp}(x,y) = \exp{-\frac{(I(x,y) - 0.5)^2}{2\sigma^2}}$$
+
+%------------------------------------------------------------> SUB SUB SECTION Normalisation des poids
+ \subsubsection{Normalisation des poids}
+Plusieurs poids sont suggérés, mais seulement deux (un par entrée) sont utilisées dans le processus de fusion. Pour normalizer la contribution de chaque image, on modifie les poids de tel sorte que la somme des deux cartes de poids soit constante et égales à $1$. Cette modification est purement locale, et ne dépend que de la valeur des poids au pixel considéré.
 
 %---------------------------------------------------> SUB SECTION Fusion par pyramide Laplacienne
 \subsection{Fusion par pyramide Laplacienne}
