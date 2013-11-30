@@ -143,12 +143,32 @@ Plusieurs poids sont suggérés, mais seulement deux (un par entrée) sont utili
 
 %---------------------------------------------------> SUB SECTION Fusion par pyramide Laplacienne
 \subsection{Fusion par pyramide Laplacienne}
-	
+L'article souligne qu'une fusion naïve des deux images, même en utilisant les poids donne des résultats visuellement peu plaisant, avec par exemple l'apparition de halos ou la distortion de couleurs. Les auteurs suggèrent donc l'utilisation d'une méthode classique de fusion d'image : la fusion laplacienne, ou fusion par pyramide laplacienne. Cette fusion s'effectue dans un espace échelle, et l'image finale est obtenue en combiantn les deux images d'entrées et les deux poids dans cet espace échelle. En particulier, on crée des pyramides laplaciennes pour les images d'entrées, tandis que les poids sont utilisés pour créer des pyramides gaussiennes. finalement, les contributions de chaque niveau de la pyramide sont sommées pour obtenir l'image finale.
+
 \section{Implémentation}
+Nous avons choisi pour l'implémentation de la méthode décrite dans l'article le language \texttt{C++}, et utilisé la librairies de vision par ordinateur open-source \texttt{OpenCV}. Cette librairie fournie de nombreux outils accélerant la mise en place des différentes méthodes décrites par l'article. Le code finale fait en lui même un peu plus de 400 lignes, et est disponible en ligne sur \texttt{\href{http://github.com/jcaille/Submarine}{gihub}}.
+
+%---------------------------------------------------> SUB SECTION Choix effectués
+\subsection{Choix effectués}
+Comme nous l'avons mentionné, l'article propoe souvent plusieurs méthodes pour arriver au même résultat. Par exemple, la partie concernant la balance des blancs mentionne en particulier l'algorithme \emph{Gray-World}, l'algorithm\emph{Shades-Of-Grey} ainsi que les approches de Finlayson et Trezzi et l'hypothèse de \emph{Grey-Edge}. Nous avons dans ces cas là fait le choix de n'implémenter qu'une des méthodes décrites pour pouvoir arriver le plus vite possible au résultat final, et comparer nos résultats à ceux montrés par les auteurs. Si nous avions eu un peu plus de temps, nous aurions probablement essayé de comparer les différentes méthodes proposées dans l'article.\\
+Nous avons toutefois pris le soin d'implémenter tous les poids décrits par les auteurs, afin de pouvoir comparer leur influence sur le résultat final.
 
 \section{Résultats}
+%---------------------------------------------------> SUB SECTION Aspect visuel et comparaison avec l'article
+\subsection{Aspect visuel et comparaison avec l'article}
+Nous avons retrouvé et testé notre implémentation sur les différentes images utilisées dans l'article. Nous avons également trouvé sur le site des auteurs leurs résultats en Haute Définition. Notre implémentation produit des résultats correctes, mais il existe quelques différences avec ceux obtenus par les auteurs de l'article. \\
+Tout d'abord, les couleurs dans notre implémentation sont de moins bonne qualité. On voit souvent apparaitre des tâches rouges, et la dynamique de couleur est moins importante. Cela est peut-être du à un mauvais choix du paramètre $\lambda$ (que les auteurs conseillent de fixer à $0.2$), où à un mauvais choix de l'implémentation de l'algorithme de balance des blancs (comme précisé précedemment, plusieurs options étaient mentionnées dans l'article, et aucune n'était clairement mise en avant).\\
+Nous observons ensuite un contraste moins important dans nos images, mais également un bruit réduit. Ceci est peut être du à l'utilisation d'un simple filtre bilatéral pour le débruitage initial, qui limite alors l'augmentation du contraste. Un choix judicieus parmis les différentes combinaisons de poids proposés par les auteurs pourrait également potentiellement améliorer les résultats de ce point de vue.
+En conclusion, nous obtenons des résultats comparables, mais de qualité inférieure. Ceci est attendu, car nous n'avons pas tenté d'optimiser pour chaque image les paramètres ($\lambda$, débruitage, poids, ...) pour obtenir le meilleur résultat, mais avons essayé de fixer les paramètres donnant un résultat correct sur chaque image du jeu de test.
 
-\section{Ouvertures et Amélioratiosn possibles}
+%---------------------------------------------------> SUB SECTION Vitesse d'éxecution
+\subsection{Vitesse d'éxecution}
+
+%---------------------------------------------------> SUB SECTION Mesure de la qualité du résultat
+\subsection{Mesure de la qualité du résultat}
+
+
+\section{Ouvertures et Améliorations possibles}
 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
