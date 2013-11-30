@@ -40,7 +40,6 @@ void whiteBalance(const cv::Mat& I, cv::Mat& dst, double lambda)
     cv::merge(channels, 3, dst);
 }
 
-#if 1
 void enhanceContrast(const cv::Mat& I, cv::Mat& dst)
 {
     int w = I.cols, h = I.rows;
@@ -68,9 +67,3 @@ void enhanceContrast(const cv::Mat& I, cv::Mat& dst)
     cv::cvtColor(enhanceYUV, dst, CV_YUV2BGR);
     
 }
-#else
-void enhanceContrast(const cv::Mat& I, cv::Mat& dst)
-{
-    std::cout << "useless here" << std::endl;
-}
-#endif
