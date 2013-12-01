@@ -17,7 +17,7 @@
 int main(int argc, const char * argv[])
 {
 
-    cv::Mat I = cv::imread("/Users/jean/Devel/Submarine/img/test_img/PICT0422.png");
+    cv::Mat I = cv::imread("/Users/jean/Devel/Submarine/img/test_img/DSCN6532.png");
     int w = I.cols, h = I.rows;
     
     cv::Mat betterI(h, w, CV_8UC3);
@@ -27,8 +27,8 @@ int main(int argc, const char * argv[])
     t = clock() - t;
     printf ("It took me %lu clicks (%f seconds).\n",t,((float)t)/CLOCKS_PER_SEC);
 
-    cv::imshow("original", I);
-    cv::imshow("enhanced", betterI);
+//    cv::imshow("original", I);
+//    cv::imshow("enhanced", betterI);
     
     cv::waitKey();
     
