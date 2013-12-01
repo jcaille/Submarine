@@ -20,13 +20,14 @@
 
 \documentclass[twoside]{article}
 
-\usepackage{lipsum} % Package to generate dummy text throughout this template
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{wrapfig}
 
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
 \usepackage[utf8]{inputenc}
 
 \usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
-\usepackage{multicol} % Used for the two-column layout of the document
 \usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
 \usepackage{booktabs} % Horizontal rules in tables
 \usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
@@ -90,8 +91,6 @@ Nous avons étudié, implémenté et mesuré les performances de la méthodes pr
 %	ARTICLE CONTENTS
 %----------------------------------------------------------------------------------------
 
-\begin{multicols}{2} % Two-column layout throughout the main article text
-
 \section{Introduction et Motivation}
 Aujoud'hui, le grand public commence à s'équiper d'appareils photos résistants à l'eau (GoPro, ...). Les images acquises dans ces conditions difficiles sont souvents dégradées. Toutefois, ce même matériel est suffisement sensible pour permettre la restauration des images, permettant alors d'améliorer grandement la qualité des images rendues.\\
 Nous avons choisi d'effectuer ce projet car les résultats promis par l'article et la description qui en était faite nous semblait intéressants. Plusieurs concepts variés, très utilisés en images sont introduits (Balance des blancs et Gray-World, Fusion par pyramide, ...). De plus, les techniques décritent dans le papier sont applicable à de nombreux problèmes de restauration d'images, en particulier les images dégradées par un brouillard ou par la polution aérienne. Finalement, ce projet nous permettait de tester notre implémentation dans des cas réelles (typiquement : des images sous-marines trouvées sur internet). En effet, contrairement à certains projets ou les données d'entrées sont nombreuses, ou dans un format particulier, la technique décrite dans l'article peut s'appliquer aux photos individuelles.\\
@@ -105,10 +104,22 @@ La méthode décrite par l’article consiste en la fusion de deux images géné
 
 %---------------------------------------------------> SUB SECTION Balance des blancs
 \subsection{Balance des blancs}
-La première image du processus de fusion est créée afin de corriger les problèmes de balance de blancs qui existent lors des prises de vue sous marines. Comme nous pouvons le voir sur la figure, les informations de couleurs semblent à première vue être perdues. [[FIGURE]]\\
+\begin{wrapfigure}{r}{0.3\textwidth}
+  \begin{center}
+    \includegraphics[width=0.3\textwidth]{Support/input.png}
+  \end{center}
+\end{wrapfigure}
+
+La première image du processus de fusion est créée afin de corriger les problèmes de balance de blancs qui existent lors des prises de vue sous marines. Comme nous pouvons le voir sur la figure, les informations de couleurs semblent à première vue être perdues.\\
 Nous pouvons toutefois en post-traietement corriger la balance des blancs. L'article suggère plusieurs méthodes, mais aucune n'est décrite en particulier. Nous avons donc choisi d'implémenter la méthode dite de \emph{Gray-World}. L'idée sous-jacente de cette technique est de trouver l'\emph{illuminant} $i$, c'est à dire la couleur de la lumière éclairant la scène. Une fois $i$ trouvé, nous pouvons "soustraire" cette couleur à l'ensemble des pixels de la scène pour retrouver les couleurs réelles (\emph{i.e.} en lumière blanche).\\
 L'hypothèse \emph{Gray-World} suppose que la couleur moyenne d'une scène est un niveaux de gris $g$. Ainsi si on mesure $m$ la moyenne réelle des pixels de l'image : $$m = \frac{1}{N}\sum_{x \in image}I(x)$$ On peut calculer $g$ comme $$g = \frac{m_r + m_g + m_b}{3}$$ L'article suggère une correction de la luminosité de scène pour compenser la perte de luminosité due au milieu $$g' = 0.5 + \lambda g$$ où $\lambda$ est un paramètre dont la valeur recommandée par les auteurs est $0.2$. On en déduit alors la couleur de l'illuminant $$ i = \frac{m}{g}$$ Finalement, on corrige la couleur de la scène en modifiant la valeur du pixel $$I(x) = \frac{I(x)}{i}$$\\
 Nous avons ainsi corrigé l'image de telle sorte que la somme des couleurs soit effectivement une nuance de gris. L'image obtenu sera la première entrée du processus de fusion.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\textwidth]{Support/color.png}
+  \caption{L'image dont les couleurs ont été corrigées. On note la présence d'une tache rouge sur le visage de l'homme de droite, peut être due à un mauvais paramètre $\lambda$.}
+\end{figure}
 
 %---------------------------------------------------> SUB SECTION Amélioration du Contraste
 \subsection{Amélioration du Contraste}
@@ -116,16 +127,34 @@ La seconde entrée du procussus de fusion est quand à elle créée pour corrige
 La réduction du bruit est effectué à l'aide d'un simple filtre bilatéral. Ce filtre non linéaire remplace l'intensité de chaque pixel par une moyenne pondéré des pixels avoisinants, où les poids dépendent à la fois de la distance au pixel central, mais également de la différence d'intensité entre les pixels considérés. Ce bruit a la propriété de conserver les contours tout en supprimant correctement le bruit. Il est important de noter que si l'article conseille un débruitage cohérent dans le temps (pouvant donc s'appliquer à la vidéo), cela n'est pas nécessaire pour les applications à des images simples. [[FIGURE]]\\
 Il existe de nombreuses méthodes permettant de réhausser le contraste de l'image, en particulier la méthode de \emph{Local Adaptative histogram Equalization} qui égalise localement des histogrammes, c'est-à-dire une transformation locale du constraste basée sur le voisinage du pixel. Contrairement à une méthode globale, on ne court pas le risque de saturer l'image tout en gardant une plage dynamique maximum. Toutefois, il est important de noter que cette technique est très sensible au bruit. Si le filtre bilatéral appliqué n'est pas assez puissant, il peut être nécessaire d'employer une technique plus robuste pour augmenter le constraste. Une solution consiste à employer une méthode similaire nommée \emph{Constrast Limited Adaptative Histogram Equalization (CLAHE)}. Dans cette méthode, le contraste est limité, et les pics de l'histogrammes sont redistribués uniformément dans l'histogramme.
 
+\begin{figure}[]
+  \centering
+  \includegraphics[width=0.75\textwidth]{Support/contrast.png}
+  \caption{L'image après amélioration du contraste}
+\end{figure}
+
 %---------------------------------------------------> SUB SECTION Poids de fusions
 \subsection{Poids de fusions}
 Une fois les deux entrées générées, il est nécessaire de les fusionner de manière intelligente. Une simple moyenne des images (fusion naïve) n'est pas adaptée, en effet, sur certaines zones (contours, zones visuellement proéminentes, ...) il est nécessaire de faire ressortir le contraste (et donc l'entrée numéro 2) au détriment des couleurs, alors que dans les zones constantes (aplats de couleur), il vaut mieux mettre en avant la correction de couleur. La fusion va donc s'effectuer en fonction d'un ou plusieurs poids, qui dénotterons l'importance que l'on souhaite appliquer à chaque image d'entrée dans l'image résultante, et ce pour tous les pixels considérés. 
 
 %------------------------------------------------------------> SUB SUB SECTION Poid 1
 \subsubsection{Poids Laplacien}
-Il se calcul en appliquand un filtre laplacien sur chaque entrées du filtre. Il est censé mettre en valeur les contours et zones texturées, mais est peu adapté aux problèmes de restaurations d'images sous-marines, car il ne fait pas la différence entre zones de lumnisoté constante et zones de luminosité légèrement croissante (ou décroissante)
+\subsection{Balance des blancs}
+
+
+Il se calcul en appliquant un filtre laplacien sur chaque entrées du filtre. Il est censé mettre en valeur les contours et zones texturées, mais est peu adapté aux problèmes de restaurations d'images sous-marines, car il ne fait pas la différence entre zones de lumnisoté constante et zones de luminosité légèrement croissante (ou décroissante)
+
+\begin{figure}[]
+  \centering
+  \includegraphics[width=0.45\textwidth]{Support/laplacian.png}
+  \includegraphics[width=0.45\textwidth]{Support/lc.png}
+
+  \caption{Poids laplacien et Poids de contraste local}
+\end{figure}
 
 %------------------------------------------------------------> SUB SUB SECTION Poids 2
 \subsubsection{Poids de Contraste Local}
+
 Ce poids a été créé pour mettre en avant les zones contrastées. Il se calcul en chaque pixel par la différence de la valeur de l'image I avec la valeur de I filtré par un passe-bas : $$ W_{LC}(x,y) = \|I(x,y) - I_{f}(x,y)\| $$
 L'article recommande l'utilisation pour le filtre passe-bas d'un noyeau binomial séparable de taille $5$ x $5$. Ce filtre est en effet une bonne approximation d'une Gaussienne, tout en restant algorithmiquement peu couteux à calculer.
 
@@ -133,9 +162,21 @@ L'article recommande l'utilisation pour le filtre passe-bas d'un noyeau binomial
 \subsubsection{Poids de Saillance}
 Le poids de Saillanche cherche à mettre en valeur les objets visuellement proéminants qui peuvent exister dans une scène sous-marines. Une technique pour trouver la saillance d'un point et de comparer sa valeure avec une moyenne des valeurs des pixels l'entourant. Ce comportement est similaire au concept biologique de \emph{center-surround constrast}, ou contraste centre-contour. Toutefois, l'article précise que ce poids favorise les zones lumineuses, et pour protéger les tons moyens, les auteurs suggèrent l'utilisation du poids d'exposition.
 
+\begin{figure}[]
+  \centering
+  \includegraphics[width=0.45\textwidth]{Support/saliency.png}
+  \includegraphics[width=0.45\textwidth]{Support/exposedness.png}
+  \caption{Poids de Saillance et poids d'exposition}
+\end{figure}
+
 %------------------------------------------------------------> SUB SUB SECTION Poids d'exposition
 \subsubsection{Poids d'exposition}
 Cette carte de poids cherche à estimer si le pixel considéré est bien exposé, i.e. si sa luminosité est proche de la valeur moyenne $0.5$. On utilise ensuite une gaussienne pour obtenir la valeur du poids : $$W_{exp}(x,y) = \exp{-\frac{(I(x,y) - 0.5)^2}{2\sigma^2}}$$
+
+\begin{figure}[]
+  \centering
+  \caption{Poids d'exposition}
+\end{figure}
 
 %------------------------------------------------------------> SUB SUB SECTION Normalisation des poids
  \subsubsection{Normalisation des poids}
@@ -156,6 +197,15 @@ Nous avons toutefois pris le soin d'implémenter tous les poids décrits par les
 \section{Résultats}
 %---------------------------------------------------> SUB SECTION Aspect visuel et comparaison avec l'article
 \subsection{Aspect visuel et comparaison avec l'article}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.45\textwidth]{Support/input.png}
+  \includegraphics[width=0.45\textwidth]{Support/theirs.png}
+  \includegraphics[width=0.55\textwidth]{Support/ours.png}
+  \caption{Comparaison des résultats. En haut : L'image d'entrée et les résultats des auteurs. En bas : Notre résultat.}
+\end{figure}
+
 Nous avons retrouvé et testé notre implémentation sur les différentes images utilisées dans l'article. Nous avons également trouvé sur le site des auteurs leurs résultats en Haute Définition. Notre implémentation produit des résultats correctes, mais il existe quelques différences avec ceux obtenus par les auteurs de l'article. \\
 Tout d'abord, les couleurs dans notre implémentation sont de moins bonne qualité. On voit souvent apparaitre des tâches rouges, et la dynamique de couleur est moins importante. Cela est peut-être du à un mauvais choix du paramètre $\lambda$ (que les auteurs conseillent de fixer à $0.2$), où à un mauvais choix de l'implémentation de l'algorithme de balance des blancs (comme précisé précedemment, plusieurs options étaient mentionnées dans l'article, et aucune n'était clairement mise en avant).\\
 Nous observons ensuite un contraste moins important dans nos images, mais également un bruit réduit. Ceci est peut être du à l'utilisation d'un simple filtre bilatéral pour le débruitage initial, qui limite alors l'augmentation du contraste. Un choix judicieus parmis les différentes combinaisons de poids proposés par les auteurs pourrait également potentiellement améliorer les résultats de ce point de vue.
@@ -170,6 +220,7 @@ La vitesse d'exécution est correcte. En moyenne, pour traiter une image de tail
 Si visuellement parlant, les résultats sont satisfaisants, une mesure de la qualité de nos résultats indépendante est nécessaire. Pour cela, l'article évoque que leur technique permet également d'améliorer les résultats d'autres méthodes, tels que la détection et le matching de features. Les auteurs remarquent que peut de points remarquables sont détectés sur les images initiales, mais que de nombreux points de ce types étaits obtenus sur les images corrigées. Nous avons donc voulu mesurer la qualité de nos résultats en comptant le nombres de SURF (\emph{Speeded Up Robust Features}) trouvés sur les images.
 
 \begin{table}[H]
+	\centering
     \begin{tabular}{llll}
     \# de SURF : &Init. &Amélioré\\
     \toprule
@@ -191,25 +242,9 @@ Si visuellement parlant, les résultats sont satisfaisants, une mesure de la qua
 
 Nous voyons donc qu'en moyenne, 165\% fois plus de features sont detectés après l'amélioration de l'image. Toutefois, ces résultats sont faibles par rapport aux résultats de l'article, ou des chiffres de l'ordre de 800\% sont atteints. On peut supposer que la mauvaise amélioration du contraste dans notre implémentation mène à une moins bonne détection des SURF, qui se basent notemment sur les contours, et la matrices Hessiennes, fortement sensible au contraste de l'image.
 
-
 \section{Ouvertures et Améliorations possibles}
+Si nous avions un peu plus de temps, nous aurions aimé comprendre pourquoi les résultats obtenus avec notre implémentation ne sont pas aussi bon que ceux obtenus par les auteurs de l'article. Il est probable que plusieurs paramètres rentrent en jeux, et que certains choix effectués durant l'implémentation n'ont pas été correctes. En outre, plusieurs ouvertures et applications des méthodes présentées dans l'article sont possible. Comme mentionné par les auteurs, une technique similaire peut être utilisée pour traiter des iamges dégradées par le brouillard. Nous n'avons pas testé notre implémentation sur de telles images, mais il aurait pu être intéressant de voir quels paramètres étaient les plus adaptés à ce traitement. Nous pourrions également chercher à améliorer l'algorithme et implémenter le débruitage temporel, afin de pouvoir traiter la vidéo en une échelle de temps raisonnable (Actuellement, à raison de $2$ secondes par image, le traitement se fait en seulement $60$ fois le temps réel).
 
 %----------------------------------------------------------------------------------------
-%	REFERENCE LIST
-%----------------------------------------------------------------------------------------
-
-\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
-
-\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
-Figueredo, A.~J. and Wolf, P. S.~A. (2009).
-\newblock Assortative pairing and life history strategy - a cross-cultural
-  study.
-\newblock {\em Human Nature}, 20:317--330.
- 
-\end{thebibliography}
-
-%----------------------------------------------------------------------------------------
-
-\end{multicols}
 
 \end{document}
