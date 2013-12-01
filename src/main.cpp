@@ -27,10 +27,10 @@ int main(int argc, const char * argv[])
     t = clock() - t;
     printf ("It took me %lu clicks (%f seconds).\n",t,((float)t)/CLOCKS_PER_SEC);
 
-//    cv::imshow("original", I);
-//    cv::imshow("enhanced", betterI);
+    cv::imshow("original", I);
+    cv::imshow("enhanced", betterI);
     
-//    cv::waitKey();
+    cv::waitKey();
     
     return 0;
 }

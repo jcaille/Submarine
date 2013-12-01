@@ -162,10 +162,34 @@ Nous observons ensuite un contraste moins important dans nos images, mais égale
 En conclusion, nous obtenons des résultats comparables, mais de qualité inférieure. Ceci est attendu, car nous n'avons pas tenté d'optimiser pour chaque image les paramètres ($\lambda$, débruitage, poids, ...) pour obtenir le meilleur résultat, mais avons essayé de fixer les paramètres donnant un résultat correct sur chaque image du jeu de test.
 
 %---------------------------------------------------> SUB SECTION Vitesse d'éxecution
-\subsection{Vitesse d'éxecution}
+\subsection{Vitesse d'exécution}
+La vitesse d'exécution est correcte. En moyenne, pour traiter une image de taille 1037x768, l'algorithme nécessite $1.9$ secondes. Nous n'avons ainsi par cherché à optimiser particulièrement la vitesse d'exécution de notre code. Plusieurs améliorations sont possibles à ce niveau. Nous aurions pu utiliser la programmations sur GPU, pour par exemple accélerer la fusion laplacienne ou la mise en place des \emph{CLAHE}. Nous aurions pu également accéléré l'étape de balance des blancs en calculant la valeur de l'illuminant sur une plus petite portion de l'image.
 
 %---------------------------------------------------> SUB SECTION Mesure de la qualité du résultat
 \subsection{Mesure de la qualité du résultat}
+Si visuellement parlant, les résultats sont satisfaisants, une mesure de la qualité de nos résultats indépendante est nécessaire. Pour cela, l'article évoque que leur technique permet également d'améliorer les résultats d'autres méthodes, tels que la détection et le matching de features. Les auteurs remarquent que peut de points remarquables sont détectés sur les images initiales, mais que de nombreux points de ce types étaits obtenus sur les images corrigées. Nous avons donc voulu mesurer la qualité de nos résultats en comptant le nombres de SURF (\emph{Speeded Up Robust Features}) trouvés sur les images.
+
+\begin{table}[H]
+    \begin{tabular}{llll}
+    \# de SURF : &Init. &Amélioré\\
+    \toprule
+    DSCN6522     & 33       & 136        & 312 \%     \\
+    DSCN6523     & 25       & 66         & 164 \%     \\
+    DSCN6532     & 48       & 93         & 94 \%      \\
+    DSCN6533     & 22       & 86         & 291 \%     \\
+    DSCN6538\_1  & 25       & 60         & 140 \%     \\
+    DSCN6539     & 70       & 97         & 39 \%      \\
+    DSCN6540     & 27       & 74         & 174 \%     \\
+    PICT0400     & 19       & 65         & 242 \%     \\
+    PICT0403     & 20       & 47         & 135 \%     \\
+    PICT0422     & 260      & 425        & 64 \%      \\
+    \toprule
+    \textbf{MOYENNE}        & \textbf{54,9}     & \textbf{114,9}   & \textbf{165,4\%}      \\
+    \end{tabular}
+    \caption{Nombre de SURF trouvés avant et après amélioration de l'image par notre implémentation.}
+\end{table}
+
+Nous voyons donc qu'en moyenne, 165\% fois plus de features sont detectés après l'amélioration de l'image. Toutefois, ces résultats sont faibles par rapport aux résultats de l'article, ou des chiffres de l'ordre de 800\% sont atteints. On peut supposer que la mauvaise amélioration du contraste dans notre implémentation mène à une moins bonne détection des SURF, qui se basent notemment sur les contours, et la matrices Hessiennes, fortement sensible au contraste de l'image.
 
 
 \section{Ouvertures et Améliorations possibles}
