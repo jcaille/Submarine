@@ -16,9 +16,4 @@
  */
 cv::Mat floatTo8U(const cv::Mat& I);
 
-/**
- *  Counts the number of SURF features found in the image
- */
-int countSURFFound(const cv::Mat I);
-
 #endif
