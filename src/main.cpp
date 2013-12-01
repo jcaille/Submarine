@@ -7,6 +7,7 @@
 //
 
 #include <stdio.h>
+#include <time.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -15,12 +16,17 @@
 
 int main(int argc, const char * argv[])
 {
+
     cv::Mat I = cv::imread("/Users/jean/Devel/Submarine/img/test_img/DSCN6539.png");
     int w = I.cols, h = I.rows;
     
     cv::Mat betterI(h, w, CV_8UC3);
+    clock_t t;
+    t = clock();
     enhanceUnderwaterImage(I, betterI);
-    
+    t = clock() - t;
+    printf ("It took me %lu clicks (%f seconds).\n",t,((float)t)/CLOCKS_PER_SEC);
+
     cv::imshow("original", I);
     cv::imshow("enhanced", betterI);
     
