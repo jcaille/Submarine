@@ -11,7 +11,10 @@
 #include "weights.h"
 #include "colorimetry.h"
 #include "fusion.h"
+#include "utils.h"
+
 #include <opencv2/imgproc/imgproc.hpp>
+#include "iostream"
 
 void _computeFirstInput(const cv::Mat& I, cv::Mat& out)
 {
@@ -65,4 +68,8 @@ void enhanceUnderwaterImage(const cv::Mat& I, cv::Mat& out)
     _computeWeights(input,weights);
     
     laplacianFusion(input, weights, out);
+    
+    //Compare the numbers of SURF found
+    std::cout << "There were " << countSURFFound(I) << " found in the input image" << std::endl;
+    std::cout << "There are  " << countSURFFound(out) << " found in the output image" << std::endl;
 }

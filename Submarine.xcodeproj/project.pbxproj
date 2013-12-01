@@ -246,6 +246,8 @@
 					"-lopencv_imgproc",
 					"-lopencv_highgui",
 					"-lopencv_core",
+					"-lopencv_nonfree",
+					"-lopencv_features2d",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -271,6 +273,8 @@
 					"-lopencv_imgproc",
 					"-lopencv_highgui",
 					"-lopencv_core",
+					"-lopencv_nonfree",
+					"-lopencv_features2d",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
