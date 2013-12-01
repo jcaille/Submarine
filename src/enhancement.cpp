@@ -11,12 +11,7 @@
 #include "weights.h"
 #include "colorimetry.h"
 #include "fusion.h"
-#include "utils.h"
-
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include "iostream"
 
 void _computeFirstInput(const cv::Mat& I, cv::Mat& out)
 {
@@ -44,26 +39,7 @@ void _computeWeights(const std::vector<cv::Mat>& input, std::vector<cv::Mat>& we
     }
     
     normalizeWeightMaps(weights);
-}
-
-void saveWeights(cv::Mat I)
-{
-    int w = I.cols ; int h = I.rows;
-    cv::Mat weight(h, w, CV_32F);
     
-    computeEWeight(I, weight); cv::normalize(weight, weight, 0, 255, cv::NORM_MINMAX);
-    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/exposedness.png", weight);
-    
-    computeLCWeight(I, weight); cv::normalize(weight, weight, 0, 255*5, cv::NORM_MINMAX);
-    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/lc.png", weight);
-
-    computeLWeight(I, weight); cv::normalize(weight, weight, 0, 255*5, cv::NORM_MINMAX);
-    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/laplacian.png", weight);
-
-    computeSWeight(I, weight); cv::normalize(weight, weight, 0, 255*5, cv::NORM_MINMAX);
-    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/saliency.png", weight);
-    cv::imshow("Youpi", weight);
-
 }
 
 void enhanceUnderwaterImage(const cv::Mat& I, cv::Mat& out)
@@ -90,11 +66,4 @@ void enhanceUnderwaterImage(const cv::Mat& I, cv::Mat& out)
     
     laplacianFusion(input, weights, out);
     
-    //Compare the numbers of SURF found
-    std::cout << "There were " << countSURFFound(I) << " found in the input image" << std::endl;
-    std::cout << "There are  " << countSURFFound(out) << " found in the output image" << std::endl;
-    saveWeights(firstInput);
-    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/color.png", firstInput);
-    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/contrast.png", secondInput);
-
 }

@@ -107,6 +107,7 @@ void normalizeWeightMaps(std::vector<cv::Mat>& maps)
     assert(n>0);
     
     int w = maps[0].cols, h = maps[0].rows;
+    float e = 1/float(n);
     
     // Compute the per element sum
     cv::Mat sum(h,w,CV_32FC1);
@@ -115,7 +116,16 @@ void normalizeWeightMaps(std::vector<cv::Mat>& maps)
         cv::add(sum, maps[i], sum);
 
     // Divide each map with the per-element sum
+    for (size_t i = 0; i < n; ++i){
+        for (int y = 0; y < h; ++y){
+            for (int x = 0; x < w; ++x){
+                if (sum.at<float>(y,x)){
+                    maps[i].at<float>(y,x)/=sum.at<float>(y,x);
+                } else {
+                    maps[i].at<float>(y,x) = e;
+                }
+            }
+        }
+    }
 
-    for (size_t i = 0; i < n; ++i)
-        cv::divide(maps[i], sum, maps[i]);
 }
