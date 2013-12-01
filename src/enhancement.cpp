@@ -65,17 +65,4 @@ void enhanceUnderwaterImage(const cv::Mat& I, cv::Mat& out)
     _computeWeights(input,weights);
     
     laplacianFusion(input, weights, out);
-    
-    std::vector<cv::Mat> weights;
-    weights.push_back(weight1); weights.push_back(weight2);
-    normalizeWeightMaps(weights);
-    
-    std::vector<cv::Mat> inputs;
-    inputs.push_back(firstInput); inputs.push_back(secondInput);
-    
-    cv::Mat dst(h, w, CV_8UC3);
-    fuseInputs(inputs, weights, dst);
-
-    // For now
-    dst.copyTo(out);
 }
