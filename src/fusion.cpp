@@ -9,6 +9,8 @@
 #include "fusion.h"
 
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core/core.hpp>
 
 #pragma mark - GAUSSIAN PYRAMID
 
@@ -76,6 +78,41 @@ void naiveFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::Mat>&
     }
 }
 
+void savePyramidImages(std::vector<cv::Mat> gaussianPyramid, std::vector<cv::Mat> laplacianPyramid)
+{
+    cv::Mat res; 
+    cv::normalize(gaussianPyramid[0], res , 0, 255, cv::NORM_MINMAX);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/gaussian0.png", res);
+    
+    cv::normalize(gaussianPyramid[1], res , 0, 255, cv::NORM_MINMAX);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/gaussian1.png", res);
+
+    cv::normalize(gaussianPyramid[2], res , 0, 255, cv::NORM_MINMAX);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/gaussian2.png", res);
+
+    cv::normalize(gaussianPyramid[3], res , 0, 255, cv::NORM_MINMAX);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/gaussian3.png", res);
+
+    cv::normalize(gaussianPyramid[4], res , 0, 255, cv::NORM_MINMAX);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/gaussian4.png", res);
+
+    cv::normalize(laplacianPyramid[0], res , 0, 255, cv::NORM_MINMAX);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/laplacian0.png", res);
+    
+    cv::normalize(laplacianPyramid[1], res , 0, 255, cv::NORM_MINMAX);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/laplacian1.png", res);
+
+    cv::normalize(laplacianPyramid[2], res , 0, 255, cv::NORM_MINMAX);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/laplacian2.png", res);
+
+    cv::normalize(laplacianPyramid[3], res , 0, 255, cv::NORM_MINMAX);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/laplacian3.png", res);
+
+    cv::normalize(laplacianPyramid[4], res , 0, 255, cv::NORM_MINMAX);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/laplacian4.png", res);
+
+}
+
 void laplacianFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::Mat>& weights, cv::Mat& dst)
 {
     assert(inputs.size() == weights.size());
@@ -90,6 +127,8 @@ void laplacianFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::M
         laplacianPyramid(inputs[i], levels, inputPyramids[i]);
         gaussianPyramid(weights[i], levels+1, weightPyramids[i]);
     }
+    
+    savePyramidImages(weightPyramids[0], inputPyramids[0]);
     
     // "Inverse" pyramids dimensions (start by level, then by image instead of the inverse)
     std::vector< std::vector<cv::Mat> > invInputPyramids(levels+1);

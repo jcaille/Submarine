@@ -23,6 +23,7 @@
 \usepackage{graphics}
 \usepackage{graphicx}
 \usepackage{wrapfig}
+\usepackage{multicol}
 
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
 \usepackage[utf8]{inputenc}
@@ -172,9 +173,37 @@ Plusieurs poids sont suggérés, mais seulement deux (un par entrée) sont utili
 
 %---------------------------------------------------> SUB SECTION Fusion par pyramide Laplacienne
 \subsection{Fusion par pyramide Laplacienne}
-L'article souligne qu'une fusion naïve des deux images, même en utilisant les poids, donne des résultats visuellement peu plaisants, avec par exemple l'apparition de halos ou une distortion des couleurs. Les auteurs suggèrent donc l'utilisation d'une méthode classique de fusion d'image : la fusion Laplacienne, ou fusion par pyramide Laplacienne. Cette fusion s'effectue dans un espace échelle, et l'image finale est obtenue en combinant les deux images d'entrées et les deux poids dans cet espace échelle. En particulier, on construit des pyramides Laplaciennes pour les images d'entrées, tandis que les poids sont utilisés pour créer des pyramides gaussiennes. Finalement, les contributions de chaque niveau de la pyramide sont sommées pour obtenir l'image finale.
+L'article souligne qu'une fusion naïve des deux images, même en utilisant les poids, donne des résultats visuellement peu plaisants, avec par exemple l'apparition de halos ou une distortion des couleurs. Les auteurs suggèrent donc l'utilisation d'une méthode classique de fusion d'image : la fusion Laplacienne, ou fusion par pyramide Laplacienne. Cette fusion s'effectue dans un espace échelle, et l'image finale est obtenue en combinant les deux images d'entrées et les deux poids dans cet espace échelle. En particulier, on construit des pyramides Laplaciennes pour les images d'entrées, tandis que les poids sont utilisés pour créer des pyramides gaussiennes. Finalement, les contributions de chaque niveau de la pyramide sont sommées pour obtenir l'image finale.\\
 
-[[ ADD STUFF HERE ! IMPORTANT ! réexpliquer ce que sont les pyramides laplacienne et gaussienne, mettre une figure d’exemple du 2nd input, avec sa pyramide laplacienne et le poid d’exposition et sa pyramide gaussienne ]]
+%---------------------------------------------------> SUB SECTION Pyramide Gaussienne
+\subsection{Pyramide Gaussienne}
+Une pyramide gaussienne est une représentation de l'image sur plusieurs niveaux de résolutions. Elle permet à l'algorithme de fusion de considérer l'image comme une réunion échelles de détails, du plus fin au plus grossier. Pour passer descendre d'un niveau dans la pyramide, on convolue l'image par un filtre gaussien (passe-bas), puis on divise la résolution de l'image par deux.
+
+\begin{figure}
+  \centering
+  \vspace{0.1cm}
+  \includegraphics[width=0.4\textwidth]{Support/gaussian0.png}
+  \includegraphics[width=0.4\textwidth]{Support/laplacian0.png}\\
+  \vspace{0.1cm}
+  \includegraphics[width=0.4\textwidth]{Support/gaussian1.png}
+  \includegraphics[width=0.4\textwidth]{Support/laplacian1.png}\\
+  \vspace{0.1cm}
+  \includegraphics[width=0.4\textwidth]{Support/gaussian2.png}
+  \includegraphics[width=0.4\textwidth]{Support/laplacian2.png}\\
+  \vspace{0.1cm}
+  \includegraphics[width=0.196\textwidth]{Support/gaussian3.png}
+  \includegraphics[width=0.196\textwidth]{Support/gaussian4.png}
+  \vspace{0.1cm}
+  \includegraphics[width=0.196\textwidth]{Support/laplacian3.png}
+  \includegraphics[width=0.196\textwidth]{Support/laplacian4.png}
+
+  \caption{Pyramide gaussienne du poids d'exposition et pyramide laplacienne de l'image d'entrée}
+\end{figure}
+
+
+%---------------------------------------------------> SUB SECTION Pyramide Laplacienne
+\subsection{Pyramide Laplacienne}
+La pyramide laplacienne est similaire à la pyramide gaussienne, a ceci près que le filtre appliqué avant la réduction de la taille de l'image est un filtre laplacien. Cette technique permet de faire ressortir des contours de plus en plus larges de l'image.
 
 \section{Implémentation}
 Nous avons choisi pour l'implémentation de la méthode décrite dans l'article le language \texttt{C++}, et utilisé la librairie de vision par ordinateur open-source \texttt{OpenCV}. Cette librairie fournie de nombreux outils accélerant la mise en place des différentes méthodes décrites par l'article. Le code finale fait en lui même un peu plus de 400 lignes, et est disponible en ligne sur \texttt{\href{http://github.com/jcaille/Submarine}{gihub}}.
