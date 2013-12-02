@@ -24,6 +24,7 @@
 \usepackage{graphicx}
 \usepackage{wrapfig}
 \usepackage{multicol}
+\usepackage[french]{babel}
 
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
 \usepackage[utf8]{inputenc}
@@ -103,12 +104,11 @@ La méthode décrite par l’article consiste en la fusion de deux images géné
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.75\textwidth]{Support/input.png}
-  \caption{caption}
 \end{figure}
 
 La première image du processus de fusion est créée afin de corriger les problèmes de balance de blancs qui existent lors des prises de vue sous-marines. Comme nous pouvons le voir sur la figure, les informations de couleurs semblent à première vue être perdues.\\
 Nous pouvons toutefois en post-traitement corriger la balance des blancs. L'article suggère plusieurs méthodes, mais aucune n'est décrite en particulier. Nous avons donc choisi d'implémenter la méthode dite de \emph{Gray-World}. L'idée sous-jacente de cette technique est de trouver l'\emph{illuminant} $i$, c'est à dire la couleur de la lumière éclairant la scène. Une fois $i$ trouvé, nous pouvons "corriger" cette couleur à l'ensemble des pixels de la scène pour retrouver les couleurs réelles (\emph{i.e.} en lumière blanche).\\
-L'hypothèse \emph{Gray-World} suppose que la couleur moyenne d'une scène est un niveaux de gris $g$. Ainsi si on mesure $m$ la moyenne réelle des pixels de l'image : $$m = \frac{1}{N}\sum_{x \in image}I(x)$$ On peut calculer $g$ comme $$g = \frac{m_r + m_g + m_b}{3}$$ L'article suggère une correction de la luminosité de scène pour compenser la perte de luminosité due au milieu $$g' = 0.5 + \lambda g$$ où $\lambda$ est un paramètre dont la valeur recommandée par les auteurs est $0.2$. On en déduit alors la couleur de l'illuminant $$ i = \frac{m}{g}$$ Finalement, on corrige la couleur de la scène en modifiant la valeur du pixel $$I(x) = \frac{I(x)}{i}$$\\
+L'hypothèse \emph{Gray-World} suppose que la couleur moyenne d'une scène est un niveaux de gris $g$. Ainsi si on mesure $m$ la moyenne réelle des pixels de l'image : $$m = \frac{1}{N}\sum_{x \in image}I(x)$$ On peut calculer $g$ comme $$g = \frac{m_r + m_g + m_b}{3}$$ L'article suggère une correction de la luminosité de scène pour compenser la perte de luminosité due au milieu $$g' = 0.5 + \lambda g$$ où $\lambda$ est un paramètre dont la valeur recommandée par les auteurs est $0.2$. On en déduit alors la couleur de l'illuminant $$ i = \frac{m}{g}$$ Finalement, on corrige la couleur de la scène en modifiant la valeur du pixel $$I'(x) = \frac{I(x)}{i}$$\\
 Nous avons ainsi corrigé l'image de telle sorte que la somme des couleurs soit effectivement une nuance de gris. L'image obtenu sera la première entrée du processus de fusion.
 
 \begin{figure}[H]
@@ -126,7 +126,7 @@ Il existe de nombreuses méthodes permettant de réhausser le contraste de l'ima
 \begin{figure}[]
   \centering
   \includegraphics[width=0.75\textwidth]{Support/contrast.png}
-  \caption{L'image après amélioration du contraste}
+  \caption{L'image après amélioration du contraste.}
 \end{figure}
 
 %---------------------------------------------------> SUB SECTION Poids de fusions
@@ -143,14 +143,14 @@ Il se calcul en appliquant un filtre laplacien sur chaque entrées du filtre. Il
   \includegraphics[width=0.45\textwidth]{Support/laplacian.png}
   \includegraphics[width=0.45\textwidth]{Support/lc.png}
 
-  \caption{Poids laplacien et Poids de contraste local. Les valeurs des poids ont été multipliés par 5 pour les rendres visibles sur la figure, ce qui explique la forte présence de bruit}
+  \caption{Poids laplacien et Poids de contraste local. Les valeurs des poids ont été multipliés par 5 pour les rendres visibles sur la figure, ce qui explique la forte présence de bruit.}
 \end{figure}
 
 %------------------------------------------------------------> SUB SUB SECTION Poids 2
 \subsubsection{Poids de Contraste Local}
 
 Ce poids a été créé pour mettre en avant les zones contrastées. Il se calcul en chaque pixel par la différence de la valeur de l'image I avec la valeur de I filtré par un passe-bas : $$ W_{LC}(x,y) = \|I(x,y) - I_{f}(x,y)\| $$
-L'article recommande l'utilisation pour le filtre passe-bas d'un noyeau binomial séparable de taille $5$ x $5$. Ce filtre est en effet une bonne approximation d'une Gaussienne, tout en restant algorithmiquement peu couteux à calculer.
+L'article recommande l'utilisation pour le filtre passe-bas d'un noyeau binomial séparable de taille $5 \times 5$. Ce filtre est en effet une bonne approximation d'une Gaussienne, tout en restant algorithmiquement peu couteux à calculer.
 
 %------------------------------------------------------------> SUB SUB SECTION Poids de Saillance
 \subsubsection{Poids de Saillance}
@@ -160,12 +160,12 @@ Le poids de saillance cherche à mettre en valeur les objets visuellement proém
   \centering
   \includegraphics[width=0.45\textwidth]{Support/saliency.png}
   \includegraphics[width=0.45\textwidth]{Support/exposedness.png}
-  \caption{Poids de Saillance et poids d'exposition. Les valeurs des poids ont été multipliés par 5 pour les rendres visibles sur la figure, ce qui explique la forte présence de bruit}
+  \caption{Poids de Saillance et poids d'exposition. Les valeurs des poids ont été multipliés par 5 pour les rendres visibles sur la figure, ce qui explique la forte présence de bruit.}
 \end{figure}
 
 %------------------------------------------------------------> SUB SUB SECTION Poids d'exposition
 \subsubsection{Poids d'exposition}
-Cette carte de poids cherche à estimer si le pixel considéré est bien exposé, i.e. si sa luminosité est proche de la valeur moyenne $0.5$. On utilise ensuite une gaussienne pour obtenir la valeur du poids $$W_{exp}(x,y) = \exp{-\frac{(I(x,y) - 0.5)^2}{2\sigma^2}}$$
+Cette carte de poids cherche à estimer si le pixel considéré est bien exposé, i.e. si sa luminosité est proche de la valeur moyenne $0.5$. On utilise ensuite une gaussienne pour obtenir la valeur du poids $$W_{exp}(x,y) = \exp\left(-\frac{(I(x,y) - 0.5)^2}{2\sigma^2}\right)$$
 
 %------------------------------------------------------------> SUB SUB SECTION Normalisation des poids
  \subsubsection{Normalisation des poids}
@@ -176,7 +176,7 @@ Plusieurs poids sont suggérés, mais seulement deux (un par entrée) sont utili
 L'article souligne qu'une fusion naïve des deux images, même en utilisant les poids, donne des résultats visuellement peu plaisants, avec par exemple l'apparition de halos ou une distortion des couleurs. Les auteurs suggèrent donc l'utilisation d'une méthode classique de fusion d'image : la fusion Laplacienne, ou fusion par pyramide Laplacienne. Cette fusion s'effectue dans un espace échelle, et l'image finale est obtenue en combinant les deux images d'entrées et les deux poids dans cet espace échelle. En particulier, on construit des pyramides Laplaciennes pour les images d'entrées, tandis que les poids sont utilisés pour créer des pyramides gaussiennes. Finalement, les contributions de chaque niveau de la pyramide sont sommées pour obtenir l'image finale.\\
 
 %---------------------------------------------------> SUB SECTION Pyramide Gaussienne
-\subsection{Pyramide Gaussienne}
+\subsubsection{Pyramide Gaussienne}
 Une pyramide gaussienne est une représentation de l'image sur plusieurs niveaux de résolutions. Elle permet à l'algorithme de fusion de considérer l'image comme une réunion échelles de détails, du plus fin au plus grossier. Pour passer descendre d'un niveau dans la pyramide, on convolue l'image par un filtre gaussien (passe-bas), puis on divise la résolution de l'image par deux.
 
 \begin{figure}
@@ -197,16 +197,16 @@ Une pyramide gaussienne est une représentation de l'image sur plusieurs niveaux
   \includegraphics[width=0.196\textwidth]{Support/laplacian3.png}
   \includegraphics[width=0.196\textwidth]{Support/laplacian4.png}
 
-  \caption{Pyramide gaussienne du poids d'exposition et pyramide laplacienne de l'image d'entrée}
+  \caption{Pyramide gaussienne du poids d'exposition et pyramide laplacienne de l'image d'entrée.}
 \end{figure}
 
 
 %---------------------------------------------------> SUB SECTION Pyramide Laplacienne
-\subsection{Pyramide Laplacienne}
-La pyramide laplacienne est similaire à la pyramide gaussienne, a ceci près que le filtre appliqué avant la réduction de la taille de l'image est un filtre laplacien. Cette technique permet de faire ressortir des contours de plus en plus larges de l'image.
+\subsubsection{Pyramide Laplacienne}
+La pyramide laplacienne est similaire à la pyramide gaussienne, à ceci près que le filtre appliqué avant la réduction de la taille de l'image est un filtre laplacien. Cette technique permet de faire ressortir des contours de plus en plus larges de l'image.
 
 \section{Implémentation}
-Nous avons choisi pour l'implémentation de la méthode décrite dans l'article le language \texttt{C++}, et utilisé la librairie de vision par ordinateur open-source \texttt{OpenCV}. Cette librairie fournie de nombreux outils accélerant la mise en place des différentes méthodes décrites par l'article. Le code finale fait en lui même un peu plus de 400 lignes, et est disponible en ligne sur \texttt{\href{http://github.com/jcaille/Submarine}{gihub}}.
+Nous avons choisi pour l'implémentation de la méthode décrite dans l'article le language \texttt{C++}, et utilisé la librairie de vision par ordinateur open-source \texttt{OpenCV}. Cette librairie fournie de nombreux outils accélerant la mise en place des différentes méthodes décrites par l'article. Le code finale fait en lui même un peu plus de 400 lignes, et est disponible en ligne sur \texttt{\href{http://github.com/jcaille/Submarine}{github}}.
 
 %---------------------------------------------------> SUB SECTION Choix effectués
 \subsection{Choix effectués}
