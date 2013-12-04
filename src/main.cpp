@@ -29,7 +29,8 @@ int main(int argc, const char * argv[])
 
 //    cv::imshow("original", I);
 //    cv::imshow("enhanced", betterI);
-    
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/ours.jpg", betterI);
+
     cv::waitKey();
     
     return 0;

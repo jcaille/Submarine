@@ -10,6 +10,7 @@
 #include "colorimetry.h"
 #include "iostream"
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 
 void whiteBalance(const cv::Mat& I, cv::Mat& dst, double lambda)
@@ -18,15 +19,27 @@ void whiteBalance(const cv::Mat& I, cv::Mat& dst, double lambda)
     //Compute mean color of I
     cv::Scalar meanColor = cv::mean(I) / 255.0;
     
+    
     //Grey average value
     double averageGrayValue = (meanColor[0] + meanColor[1] + meanColor[2]) / 3.0;
     
+    
+    cv::Mat meanColorImage(I.size(), CV_8UC3);
+    cv::Scalar meanColorNorm = meanColor * 255.0;
+    cv::Scalar avgGV = cv::Scalar(averageGrayValue, averageGrayValue, averageGrayValue) * 255.0;
+    cv::rectangle(meanColorImage, cv::Point(0,0), cv::Point(I.cols, I.rows / 2), meanColorNorm, -1);
+    cv::rectangle(meanColorImage, cv::Point(0,I.rows / 2), cv::Point(I.cols, I.rows), avgGV, -1);
+    
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/meancolor.jpg", meanColorImage);
+
     //Correct average illumination as in paper
     if(lambda < 0){
         lambda = 0.2;
     }
     averageGrayValue = 0.5 + averageGrayValue * lambda;
     cv::Scalar illuminant = meanColor / averageGrayValue;
+
+    
 
     //Split the image into channels
     cv::Mat channels[3];

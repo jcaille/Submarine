@@ -31,6 +31,9 @@ void _computeSecondInput(const cv::Mat& firstInput, cv::Mat& out)
     cv::Mat smooth;
     cv::bilateralFilter(firstInput, smooth, -1, 20, 5);
     
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/color_denoise.jpg", smooth);
+
+    
     // Enhance contrast
     enhanceContrast(smooth, out);
 }
@@ -92,7 +95,7 @@ void enhanceUnderwaterImage(const cv::Mat& I, cv::Mat& out)
     
     //Compare the numbers of SURF found
     std::cout << "There were " << countSURFFound(I) << " found in the input image" << std::endl;
-    std::cout << "There are  " << countSURFFound(out) << " found in the output image" << std::endl;
+//    std::cout << "There are  " << countSURFFound(out) << " found in the output image" << std::endl;
     saveWeights(firstInput);
     cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/color.png", firstInput);
     cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/contrast.png", secondInput);

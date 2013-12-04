@@ -76,6 +76,9 @@ void naiveFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::Mat>&
             }
         }
     }
+
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/naive_fusion.png", dst);
+
 }
 
 void savePyramidImages(std::vector<cv::Mat> gaussianPyramid, std::vector<cv::Mat> laplacianPyramid)
@@ -146,6 +149,8 @@ void laplacianFusion(const std::vector<cv::Mat>& inputs, const std::vector<cv::M
         naiveFusion(invInputPyramids[i], invWeightPyramids[i], outputPyr[i]);
     }
     
+    cv::Mat m ;
+    naiveFusion(inputs, weights, m);
     // And construct the output from the pyramod
     reconstructFromLaplacianPyramid(outputPyr, dst);
 }

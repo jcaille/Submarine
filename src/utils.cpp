@@ -8,6 +8,8 @@
 
 #include "utils.h"
 #include <opencv2/nonfree/nonfree.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core/core.hpp>
 
 cv::Mat floatTo8U(const cv::Mat& I)
 {
@@ -25,5 +27,10 @@ int countSURFFound(const cv::Mat I)
     cv::SurfFeatureDetector detector( minHessian );
     std::vector<cv::KeyPoint> keypoints;
     detector.detect(I, keypoints );
+    
+    cv::Mat res;
+    cv::drawKeypoints(I, keypoints, res);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/keypoints_input.png", res);
+    
     return (int) keypoints.size();
 }
