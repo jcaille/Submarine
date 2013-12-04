@@ -30,7 +30,7 @@ int countSURFFound(const cv::Mat I)
     
     cv::Mat res;
     cv::drawKeypoints(I, keypoints, res);
-    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/keypoints_input.png", res);
+    cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/keypoints_ouput.png", res);
     
     return (int) keypoints.size();
 }

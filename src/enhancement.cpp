@@ -94,8 +94,8 @@ void enhanceUnderwaterImage(const cv::Mat& I, cv::Mat& out)
     laplacianFusion(input, weights, out);
     
     //Compare the numbers of SURF found
-    std::cout << "There were " << countSURFFound(I) << " found in the input image" << std::endl;
-//    std::cout << "There are  " << countSURFFound(out) << " found in the output image" << std::endl;
+//    std::cout << "There were " << countSURFFound(I) << " found in the input image" << std::endl;
+    std::cout << "There are  " << countSURFFound(out) << " found in the output image" << std::endl;
     saveWeights(firstInput);
     cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/color.png", firstInput);
     cv::imwrite("/Users/jean/Devel/Submarine/rapport/Support/contrast.png", secondInput);
